@@ -1,6 +1,7 @@
 var express = require( 'express' );
 const NodeCache = require('node-cache');
-const session = require('express-session');
+const session = require( 'express-session' );
+const request = require('request-promise-native');
 var app = express();
 
 const PORT = (process.env.PORT || 5000);
@@ -156,7 +157,7 @@ const isAuthorized = (userId) => {
   return refreshTokenStore[userId] ? true : false;
 };
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', PORT);
 
 app.use(express.static(__dirname));
 
@@ -181,10 +182,11 @@ app.get('/', function(request, response) {
 
 app.get( '/new-quote', function ( request, response )
 {
-  if ( isAuthorized( req.sessionID ) )
-  {
-    response.render( 'pages/quote' );
-  }
+  response.render( 'pages/quote' );
+  // if ( isAuthorized( request.sessionID ) )
+  // {
+  //   response.render( 'pages/quote' );
+  // }
 } );
 
 
