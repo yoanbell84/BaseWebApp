@@ -32,7 +32,7 @@ app.get( '/quote', function ( request, response )
       label: "Create Quote"
     }
   }
-  response.json(options);
+  return response.json(options);
 });
 
 
