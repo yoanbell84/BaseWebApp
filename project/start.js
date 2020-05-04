@@ -184,7 +184,7 @@ app.get('/', function(request, response) {
 app.get( '/new-quote', function ( request, response )
 {
   // response.render( 'pages/quote' );
-  if ( isAuthorized( request.sessionID ) )
+  if ( !isAuthorized( request.sessionID ) )
   {
     response.render( 'pages/quote' );
   }
