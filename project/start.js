@@ -26,10 +26,10 @@ app.get( '/quote', function ( request, response )
     results: [],
     primaryAction: {
       type: "IFRAME",
-      width: 890,
-      height: 748,
+      width: "100%",
+      height: "100%",
       uri: "https://enigmatic-tor-68993.herokuapp.com/new-quote",
-      label: "Create Quote"
+      label: "Create CRM Quote"
     }
   }
   return response.json(options);
