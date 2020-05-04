@@ -28,11 +28,11 @@ app.get( '/quote', function ( request, response )
       type: "IFRAME",
       width: 890,
       height: 748,
-      uri: "https://example.com/create-iframe-contents",
+      uri: "/new-quote",
       label: "Create Quote"
     }
   }
-  return response.json(options);
+  response.json(options);
 });
 
 
