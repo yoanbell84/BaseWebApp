@@ -27,6 +27,7 @@ if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
+
 // Scopes for this app will default to `contacts`
 // To request others, set the SCOPE environment variable instead
 let SCOPES = ['contacts'];
@@ -35,7 +36,7 @@ if (process.env.SCOPE) {
 }
 
 // On successful install, users will be redirected to /oauth-callback
-const REDIRECT_URI = `http://localhost:${ PORT }/oauth-callback`;
+const REDIRECT_URI = process.env.DEBUG ? `http://localhost:${ PORT }/oauth-callback` : 'https://enigmatic-tor-68993.herokuapp.com/oauth-callback';
 
 
 //===========================================================================//
