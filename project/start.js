@@ -11,7 +11,13 @@ app.set('view engine', 'ejs');
 
 app.get('/', function(request, response) {
   response.render('pages/index');
-});
+} );
+
+
+app.get('/new-quote', function(request, response) {
+  response.render('pages/quote');
+} );
+
 
 
 app.get( '/quote', function ( request, response )
