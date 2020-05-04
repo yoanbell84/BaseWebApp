@@ -24,13 +24,6 @@ app.get( '/quote', function ( request, response )
 {
   var options = {
     results: [],
-    settingsAction: {
-      type: "IFRAME",
-      width: 890,
-      height: 748,
-      uri: "https://example.com/settings-iframe-contents",
-      label: "Settings"
-    },
     primaryAction: {
       type: "IFRAME",
       width: 890,
