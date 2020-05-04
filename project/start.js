@@ -183,11 +183,11 @@ app.get('/', function(request, response) {
 
 app.get( '/new-quote', function ( request, response )
 {
-  response.render( 'pages/quote' );
-  // if ( isAuthorized( request.sessionID ) )
-  // {
-  //   response.render( 'pages/quote' );
-  // }
+  // response.render( 'pages/quote' );
+  if ( isAuthorized( request.sessionID ) )
+  {
+    response.render( 'pages/quote' );
+  }
 } );
 
 
