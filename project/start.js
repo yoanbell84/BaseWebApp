@@ -28,7 +28,7 @@ app.get( '/quote', function ( request, response )
       type: "IFRAME",
       width: 890,
       height: 748,
-      uri: "/new-quote",
+      uri: "https://enigmatic-tor-68993.herokuapp.com/new-quote",
       label: "Create Quote"
     }
   }
