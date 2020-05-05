@@ -193,21 +193,23 @@ app.get( '/new-quote', function ( request, response )
 
 app.post( '/webhock', function ( request, response )
 {
-  clientSecret = process.env.CLIENT_SECRET;
-  httpMethod = 'POST';
-  httpURI = process.env.webhock_url;
-  requestBody = request && request.body || null;
+  console.log( 'Response ====================', response )
+  console.log('Body ====================',response.body )
+  // clientSecret = process.env.CLIENT_SECRET;
+  // httpMethod = 'POST';
+  // httpURI = process.env.webhock_url;
+  // requestBody = request && request.body || null;
 
-  sourceString = clientSecret + httpMethod + httpURI;
-  if(requestBody) sourceString =  sourceString + requestBody
-  console.log( 'sourceString: ' + sourceString );
+  // sourceString = clientSecret + httpMethod + httpURI;
+  // if(requestBody) sourceString =  sourceString + requestBody
+  // console.log( 'sourceString: ' + sourceString );
   
-  var hash = crypto.createHash('sha256').update(sourceString).digest('hex');
-  console.log( 'hash: ' + hash );
-  var requestSignature = request.headers[ 'x-hubSpot-signature' ];
-  console.log( 'hash signature: ' + requestSignature );
-  console.log('=== Retrieving WebHock ===');
-  return request.send()
+  // var hash = crypto.createHash('sha256').update(sourceString).digest('hex');
+  // console.log( 'hash: ' + hash );
+  // var requestSignature = request.headers[ 'x-hubSpot-signature' ];
+  // console.log( 'hash signature: ' + requestSignature );
+  // console.log('=== Retrieving WebHock ===');
+  return response.end()
 } );
 
 app.get( '/quote', function ( request, response )
