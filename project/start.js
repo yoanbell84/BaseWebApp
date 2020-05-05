@@ -3,6 +3,8 @@ const NodeCache = require('node-cache');
 const session = require( 'express-session' );
 const request = require('request-promise-native');
 var app = express();
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
 const crypto = require('crypto');
 
 const PORT = (process.env.PORT || 5000);
@@ -191,10 +193,11 @@ app.get( '/new-quote', function ( request, response )
   }
 } );
 
-app.post( '/webhock', function ( request, response )
+app.post( '/webhock', ( req, res ) =>
 {
-  console.log( 'Response ====================', request , '=========================================================' )
-  // console.log('Body ====================',request.body )
+  console.log( 'Request ====================', request, '=========================================================' );
+  console.log( 'Body ====================', req.body );
+  console.log( 'Signature ====================', req.headers['x-hubspot-signature'] , '=========================================================' )
   // clientSecret = process.env.CLIENT_SECRET;
   // httpMethod = 'POST';
   // httpURI = process.env.webhock_url;
@@ -209,7 +212,7 @@ app.post( '/webhock', function ( request, response )
   // var requestSignature = response.headers[ 'x-hubSpot-signature' ];
   // console.log( 'hash signature: ' + requestSignature );
   // console.log('=== Retrieving WebHock ===');
-  return response.end()
+  return res.end()
 } );
 
 app.get( '/quote', function ( request, response )
