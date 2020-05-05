@@ -3,6 +3,7 @@ const NodeCache = require('node-cache');
 const session = require( 'express-session' );
 const request = require('request-promise-native');
 var app = express();
+const crypto = require('crypto');
 
 const PORT = (process.env.PORT || 5000);
 
@@ -184,13 +185,30 @@ app.get('/', function(request, response) {
 app.get( '/new-quote', function ( request, response )
 {
   // response.render( 'pages/quote' );
-  if ( !isAuthorized( request.sessionID ) )
+  if ( isAuthorized( request.sessionID ) )
   {
     response.render( 'pages/quote' );
   }
 } );
 
+app.post( '/webhock', function ( request, response )
+{
+  clientSecret = process.env.CLIENT_SECRET;
+  httpMethod = 'POST';
+  httpURI = process.env.webhock_url;
+  requestBody = response && response.body || null;
 
+  sourceString = clientSecret + httpMethod + httpURI;
+  if(requestBody) sourceString =  sourceString + requestBody
+  console.log( 'sourceString: ' + sourceString );
+  
+  hash = crypto.createHash('sha256').update(sourceString).digest('hex');
+  console.log( 'hash: ' + hash );
+  
+  console.log('=== Retrieving WebHock ===');
+  console.log( 'Request', JSON.stringify(request, null,2) );
+  console.log('Response',JSON.stringify(response, null,2));
+} );
 
 app.get( '/quote', function ( request, response )
 {
@@ -204,7 +222,11 @@ app.get( '/quote', function ( request, response )
       label: "Create CRM Quote"
     }
   }
-  return response.json(options);
+  if ( isAuthorized( request.sessionID ) )
+  {
+    return response.json(options);
+  }
+ 
 });
 
 
