@@ -1,11 +1,14 @@
 var express = require( 'express' );
 const NodeCache = require('node-cache');
 const session = require( 'express-session' );
-const request = require('request-promise-native');
+const request = require( 'request-promise-native' );
+const redis = require( 'redis' );
 var app = express();
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
-const crypto = require('crypto');
+const crypto = require( 'crypto' );
+// let RedisStore = require( 'connect-redis' )( session );
+// let redisClient = redis.createClient();
 
 const PORT = (process.env.PORT || 5000);
 
@@ -186,11 +189,11 @@ app.get('/', function(request, response) {
 
 app.get( '/new-quote', function ( request, response )
 {
-  // response.render( 'pages/quote' );
-  if ( isAuthorized( request.sessionID ) )
-  {
-    response.render( 'pages/quote' );
-  }
+  response.render( 'pages/quote' );
+  // if ( isAuthorized( request.sessionID ) )
+  // {
+  //   response.render( 'pages/quote' );
+  // }
 } );
 
 app.post( '/webhock', ( req, res ) =>
@@ -201,18 +204,17 @@ app.post( '/webhock', ( req, res ) =>
   requestBody = JSON.stringify(req.body);
   sourceString = clientSecret + requestBody;
   var requestSignature = req.headers[ 'x-hubspot-signature' ];
-  if(req.headers['x-hubspot-signature-version'] == 'v2')
+  
+  if ( req.headers[ 'x-hubspot-signature-version' ] == 'v2' )
   sourceString = clientSecret + httpMethod + httpURI + requestBody;
   
-
-  console.log( 'sourceString: ' + sourceString );
+  var hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
   
-  var hash = crypto.createHash('sha256').update(sourceString).digest('hex');
-  console.log( 'hash: ' + hash );
-  console.log( 'hash signature: ' + requestSignature );
-
-  console.log( '=== Retrieving WebHock ===' );
-  console.log( 'Body ====================', req.body );
+  if ( hash == requestSignature )
+  { 
+    console.log( '=== Retrieving WebHock ===' );
+    console.log(req.body );
+  }
   res.end();
 
 } );
@@ -229,11 +231,7 @@ app.get( '/quote', function ( request, response )
       label: "Create CRM Quote"
     }
   }
-  if ( isAuthorized( request.sessionID ) )
-  {
-    return response.json(options);
-  }
- 
+  return response.json(options);
 });
 
 
