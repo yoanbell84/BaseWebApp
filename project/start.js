@@ -193,8 +193,8 @@ app.get( '/new-quote', function ( request, response )
 
 app.post( '/webhock', function ( request, response )
 {
-  console.log( 'Response ====================', response , '=========================================================' )
-  console.log('Body ====================',request.body )
+  console.log( 'Response ====================', request , '=========================================================' )
+  // console.log('Body ====================',request.body )
   // clientSecret = process.env.CLIENT_SECRET;
   // httpMethod = 'POST';
   // httpURI = process.env.webhock_url;
