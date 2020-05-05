@@ -198,15 +198,19 @@ app.post( '/webhock', ( req, res ) =>
   clientSecret = process.env.CLIENT_SECRET;
   httpMethod = 'POST';
   httpURI = process.env.webhock_url;
-  requestBody = req.body;
-
+  requestBody = JSON.stringify(req.body);
+  sourceString = clientSecret + requestBody;
+  var requestSignature = req.headers[ 'x-hubspot-signature' ];
+  if(req.headers['x-hubspot-signature-version'] == 'v2')
   sourceString = clientSecret + httpMethod + httpURI + requestBody;
+  
+
   console.log( 'sourceString: ' + sourceString );
   
   var hash = crypto.createHash('sha256').update(sourceString).digest('hex');
   console.log( 'hash: ' + hash );
-  var requestSignature = req.headers['x-hubspot-signature'];
   console.log( 'hash signature: ' + requestSignature );
+
   console.log( '=== Retrieving WebHock ===' );
   console.log( 'Body ====================', req.body );
   res.end();
