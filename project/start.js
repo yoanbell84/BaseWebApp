@@ -206,8 +206,8 @@ app.post( '/webhock', function ( request, response )
   console.log( 'hash: ' + hash );
   
   console.log('=== Retrieving WebHock ===');
-  console.log( 'Request', JSON.stringify(request, null,2) );
-  console.log('Response',JSON.stringify(response, null,2));
+  console.log( 'Request', request );
+  console.log('Response',response);
 } );
 
 app.get( '/quote', function ( request, response )
