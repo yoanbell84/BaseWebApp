@@ -202,12 +202,12 @@ app.post( '/webhock', function ( request, response )
   if(requestBody) sourceString =  sourceString + requestBody
   console.log( 'sourceString: ' + sourceString );
   
-  hash = crypto.createHash('sha256').update(sourceString).digest('hex');
+  var hash = crypto.createHash('sha256').update(sourceString).digest('hex');
   console.log( 'hash: ' + hash );
-  
+  var requestSignature = request.headers[ 'x-hubSpot-signature' ];
+  console.log( 'hash signature: ' + requestSignature );
   console.log('=== Retrieving WebHock ===');
-  console.log( 'Request', request );
-  console.log('Response',response);
+  return request.statusCode( 200 ).send()
 } );
 
 app.get( '/quote', function ( request, response )
