@@ -193,8 +193,8 @@ app.get( '/new-quote', function ( request, response )
 
 app.post( '/webhock', function ( request, response )
 {
-  console.log( 'Response ====================', response )
-  console.log('Body ====================',response.body )
+  console.log( 'Response ====================', response , '=========================================================' )
+  console.log('Body ====================',request.body )
   // clientSecret = process.env.CLIENT_SECRET;
   // httpMethod = 'POST';
   // httpURI = process.env.webhock_url;
@@ -206,7 +206,7 @@ app.post( '/webhock', function ( request, response )
   
   // var hash = crypto.createHash('sha256').update(sourceString).digest('hex');
   // console.log( 'hash: ' + hash );
-  // var requestSignature = request.headers[ 'x-hubSpot-signature' ];
+  // var requestSignature = response.headers[ 'x-hubSpot-signature' ];
   // console.log( 'hash signature: ' + requestSignature );
   // console.log('=== Retrieving WebHock ===');
   return response.end()
