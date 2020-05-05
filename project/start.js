@@ -223,9 +223,9 @@ app.get( '/quote', function ( request, response )
 {
   var options = {
     results: [ {
-      quote_name: 'Yoan-test-quote',
-      purchase_terms: 'Sample terms',
-      comments_buyer: 'Sample Comments'
+      quote_title: "Yoan-test-quote",
+      purchase_terms: "Sample terms",
+      comments_buyer: "Sample Comments"
     }],
     primaryAction: {
       type: "IFRAME",
