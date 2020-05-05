@@ -222,7 +222,11 @@ app.post( '/webhock', ( req, res ) =>
 app.get( '/quote', function ( request, response )
 {
   var options = {
-    results: [],
+    results: [ {
+      quote_name: 'Yoan-test-quote',
+      purchase_terms: 'Sample terms',
+      comments_buyer: 'Sample Comments'
+    }],
     primaryAction: {
       type: "IFRAME",
       width: 890,
