@@ -189,15 +189,8 @@ app.get( '/', ( req, res ) =>
 
 app.get( '/new-quote', ( req, res ) => 
 {
-  console.log( 'QUERy------', req.query );
-  console.log( 'QUERy------', req.headers );
-  
-  console.log('BOdy------', JSON.stringify(req.body))
   res.render( 'pages/quote' );
-  // if ( isAuthorized( request.sessionID ) )
-  // {
-  //   response.render( 'pages/quote' );
-  // }
+ 
 } );
 
 app.post( '/webhock', ( req, res ) =>
@@ -225,15 +218,20 @@ app.post( '/webhock', ( req, res ) =>
 
 app.get( '/quote', function ( req, res )
 {
-  console.log( 'QUERy------', req.query )
-  console.log('BOdy------', JSON.stringify(req.body))
+
   let userId = req.query.userId;
   let userEmail = req.query.userEmail;
   let associatedObjectId = req.query.associatedObjectId;
   let associatedObjectType = req.query.associatedObjectType;
   let portalId = req.query.portalId;
 
-  let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}`;
+  let clientSecret = process.env.CLIENT_SECRET;
+  let httpMethod = 'GET';
+
+  let sourceString = clientSecret + httpMethod + req.query;
+  let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
+
+  let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}&token=${hash}`;
 
   var options = {
     results: [
