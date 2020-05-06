@@ -233,8 +233,8 @@ app.get( '/quote', function ( req, res )
   let sourceString = clientSecret + httpMethod + req.query;
   let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
   console.log('Hash--------------', hash)
-  let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}&token=${hash}`;
-
+  // let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}&token=${hash}`;
+  let httpURI = 'https://crm.easyworkforce.cloud/';
   console.log('URL to new quote--------------', httpURI)
   var options = {
     results: [
@@ -278,8 +278,8 @@ app.get( '/quote', function ( req, res )
     ],
     primaryAction: {
       type: "IFRAME",
-      width: 890,
-      height: 748,
+      width: 1500,
+      height: 1500,
       uri: httpURI,
       label: "Create CRM Quote"
     }
