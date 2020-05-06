@@ -219,26 +219,41 @@ app.post( '/webhock', ( req, res ) =>
 
 } );
 
-app.get( '/quote', function ( request, response )
+app.get( '/quote', function ( req, res )
 {
+  console.log( 'QUERy------', req.query )
+  console.log('BOdy------', JSON.stringify(req.body))
+  let userId = req.query.userId;
+  let userEmail = req.query.userEmail;
+  let associatedObjectId = req.query.associatedObjectId;
+  let associatedObjectType = req.query.associatedObjectType;
+  let portalId = req.query.portalId;
+
+  clientSecret = process.env.CLIENT_SECRET;
+  httpMethod = 'GET';
+  httpURI = process.env.webhock_url;
+  requestBody = JSON.stringify(req.body);
+  sourceString = clientSecret + requestBody;
+  var requestSignature = req.headers[ 'x-hubspot-signature' ];
+  
+  if ( req.headers[ 'x-hubspot-signature-version' ] == 'v2' )
+  sourceString = clientSecret + httpMethod + httpURI + requestBody;
+  
+  var hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
+
   var options = {
     results: [
       {
-        quote_name: "Quote Yoan-test",
+        quote_name: "Sample Yoan-quote",
         objectId: 232,
         title: 'Test-Yoan',
         link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
         properties: [
           {
-            label: "Resolved by",
+            label: "Seller",
             dataType: "EMAIL",
-            value: "ijones@hubspot.com"
-          },
-          {
-            label: "Resolution type",
-            dataType: "STRING",
-            value: "Referred to documentation"
-          },
+            value: "ybell@easyworkforce.com"
+          },         
           {
             label: "Amount",
             dataType: "CURRENCY",
@@ -274,7 +289,7 @@ app.get( '/quote', function ( request, response )
       label: "Create CRM Quote"
     }
   }
-  return response.json(options);
+  return res.json(options);
 } );
 
 
