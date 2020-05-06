@@ -190,7 +190,7 @@ app.get( '/', ( req, res ) =>
 app.get( '/new-quote', ( req, res ) => 
 {
   console.log( 'QUERy------', req.query );
-  console.log( 'Header------', req.headers );
+  console.log( 'QUERy------', req.headers );
   
   console.log('BOdy------', JSON.stringify(req.body))
   res.render( 'pages/quote' );
@@ -233,17 +233,7 @@ app.get( '/quote', function ( req, res )
   let associatedObjectType = req.query.associatedObjectType;
   let portalId = req.query.portalId;
 
-  clientSecret = process.env.CLIENT_SECRET;
-  httpMethod = 'GET';
-  httpURI = "https://enigmatic-tor-68993.herokuapp.com/new-quote";
-  requestBody = JSON.stringify(req.body);
-  sourceString = clientSecret + requestBody;
-  var requestSignature = req.headers[ 'x-hubspot-signature' ];
-  
-  if ( req.headers[ 'x-hubspot-signature-version' ] == 'v2' )
-  sourceString = clientSecret + httpMethod + httpURI + requestBody;
-  
-  var hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
+  let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}`;
 
   var options = {
     results: [
