@@ -226,7 +226,8 @@ app.get( '/quote', function ( request, response )
       {
         quote_name: "Quote Yoan-test",
         objectId: 232,
-        title:'Test-Yoan'
+        title: 'Test-Yoan',
+        link:'https://enigmatic-tor-68993.herokuapp.com/test-yoan'
        
       }
     //   {
