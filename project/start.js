@@ -225,8 +225,8 @@ app.get( '/quote', function ( request, response )
     results: [
       {
         "quote_name": "Quote Yoan-test",
-        "link": "http://example.com/1",
         "created": "2016-09-15",
+        "objectId": 5
       }
     //   {
     //   quote_title: "Yoan-test-quote",
