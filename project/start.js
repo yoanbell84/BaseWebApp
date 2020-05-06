@@ -235,7 +235,7 @@ app.get( '/quote', function ( req, res )
   console.log('Hash--------------', hash)
   let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}&token=${hash}`;
 
-  console('URL to new quote--------------', httpURI)
+  console.log('URL to new quote--------------', httpURI)
   var options = {
     results: [
       {
