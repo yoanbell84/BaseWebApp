@@ -266,7 +266,7 @@ const getExistingObjectDeal = async ( accessToken, id = 1956502869 ) => {
       headers: headers,      
     } );
     console.log('Getting deal info' , JSON.stringify(result, null,2))
-    // return JSON.parse(result).objects;
+    return JSON.parse(result);
   } catch (e) {
     console.error( '  > Unable to retrieve deal ===>',e.message );
     process.exit( 0 );
