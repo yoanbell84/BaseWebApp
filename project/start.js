@@ -267,7 +267,7 @@ const getExistingObjectDeal = async ( accessToken, id = 1956502869 ) => {
       'Content-Type': 'application/json'
     };
     console.log('===> request.get(\'https://api.hubapi.com/extensions/sales-objects/v1/object-types/\')');
-    const result = await request.get('https://api.hubapi.com/extensions/sales-objects/v1/object-types/'+id+'?hapikey='+config.devApiKey, {
+    const result = await request.get('https://api.hubapi.com/extensions/sales-objects/v1/object-types/'+100771+'?hapikey='+config.devApiKey, {
       headers: headers,      
     } );
     console.log('Getting deal info' , JSON.stringify(result, null,2))
