@@ -231,7 +231,14 @@ const isValid = (req) =>
     let httpURI = req.url;
    
     let sourceString = clientSecret + httpMethod + httpURI;
+    let sourceString2 = clientSecret + httpMethod + 'https://enigmatic-tor-68993.herokuapp.com/company-detail';
     let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
+    let hash2 = crypto.createHash( 'sha256' ).update( sourceString2 ).digest( 'hex' );
+   
+    console.log( 'Signature ===========>', requestSignature );
+    console.log( ' HASH with full url ===========>', hash )
+    console.log(' HASH with url ===========>' , hash2)
+   
     if ( hash !== requestSignature )
       result = false;
   }
