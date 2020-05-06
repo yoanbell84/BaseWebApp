@@ -246,14 +246,14 @@ app.get( '/quote', function ( request, response )
 
 app.get( '/deal-type', async ( req, res ) => 
 { 
-    const objects = await getExistingObjectDeal(accessToken );
+    const objects = await getExistingObjectDealById();
     res.write( `<a href="/"><h3>Back</h3></a>` );
     res.write( `<div id='content'>${objects}</div>` );
     console.log(objects)
   
 })
 
-const getExistingObjectDeal = async ( accessToken, id = 100777 ) => { 
+const getExistingObjectDealById = async ( id = 100777 ) => { 
   try
   { 
     const headers = {
