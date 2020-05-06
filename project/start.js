@@ -244,14 +244,7 @@ app.get( '/quote', function ( request, response )
   return response.json(options);
 } );
 
-app.get( '/deal-type', async ( req, res ) => 
-{ 
-    const objects = await getExistingObjectDealById();
-    res.write( `<a href="/"><h3>Back</h3></a>` );
-    res.write( `<div id='content'>${objects}</div>` );
-    console.log(objects)
-  
-})
+
 
 const getExistingObjectDealById = async ( id = 100777 ) => { 
   try
@@ -265,7 +258,7 @@ const getExistingObjectDealById = async ( id = 100777 ) => {
       headers: headers,      
     } );
     console.log('Getting deal info' , JSON.stringify(result, null,2))
-    return JSON.parse(result);
+    return result
   } catch (e) {
     console.error( '  > Unable to retrieve deal ===>',e.message );
     process.exit( 0 );
@@ -273,6 +266,16 @@ const getExistingObjectDealById = async ( id = 100777 ) => {
   }
 } 
 
+app.get( '/deal-type', async ( req, res ) => 
+{ 
+  const objects = await getExistingObjectDealById();
+    res.type('application/json')
+    // res.write( `<a href="/"><h3>Back</h3></a>` );
+    // res.write( `<div id='content'>${JSON.parse(objects)}</div>` );
+   res.send(objects)
+   
+  
+})
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
