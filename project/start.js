@@ -187,9 +187,13 @@ app.get( '/', ( req, res ) =>
 } );
 
 
-app.get( '/new-quote', ( request, response ) => 
+app.get( '/new-quote', ( req, res ) => 
 {
-  response.render( 'pages/quote' );
+  console.log( 'QUERy------', req.query );
+  console.log( 'Header------', req.headers );
+  
+  console.log('BOdy------', JSON.stringify(req.body))
+  res.render( 'pages/quote' );
   // if ( isAuthorized( request.sessionID ) )
   // {
   //   response.render( 'pages/quote' );
@@ -231,7 +235,7 @@ app.get( '/quote', function ( req, res )
 
   clientSecret = process.env.CLIENT_SECRET;
   httpMethod = 'GET';
-  httpURI = process.env.webhock_url;
+  httpURI = "https://enigmatic-tor-68993.herokuapp.com/new-quote";
   requestBody = JSON.stringify(req.body);
   sourceString = clientSecret + requestBody;
   var requestSignature = req.headers[ 'x-hubspot-signature' ];
@@ -285,7 +289,7 @@ app.get( '/quote', function ( req, res )
       type: "IFRAME",
       width: 890,
       height: 748,
-      uri: "https://enigmatic-tor-68993.herokuapp.com/new-quote",
+      uri: httpURI,
       label: "Create CRM Quote"
     }
   }
