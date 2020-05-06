@@ -189,6 +189,8 @@ app.get( '/', ( req, res ) =>
 
 app.get( '/new-quote', ( req, res ) => 
 {
+
+  console.log('Request Query----------', req.query)
   res.render( 'pages/quote' );
  
 } );
@@ -230,9 +232,10 @@ app.get( '/quote', function ( req, res )
 
   let sourceString = clientSecret + httpMethod + req.query;
   let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
-
+  console.log('Hash--------------', hash)
   let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}&token=${hash}`;
 
+  console('URL to new quote--------------', httpURI)
   var options = {
     results: [
       {
