@@ -218,73 +218,163 @@ app.post( '/webhock', ( req, res ) =>
 
 } );
 
+
+const isValid = (req) =>
+{
+  let result = true; 
+  if ( !req.headers[ 'x-hubspot-signature' ] ) result = false;
+  else if ( req.headers[ 'x-hubspot-signature' ] )
+  { 
+    var requestSignature = req.headers[ 'x-hubspot-signature' ];
+    let clientSecret = process.env.CLIENT_SECRET;
+    let httpMethod = req.method;
+    let httpURI = req.url;
+   
+    let sourceString = clientSecret + httpMethod + httpURI;
+    let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
+    if ( hash !== requestSignature )
+      result = false;
+  }
+  return result
+}
+
 app.get( '/quote', function ( req, res )
 {
 
-  let userId = req.query.userId;
-  let userEmail = req.query.userEmail;
-  let associatedObjectId = req.query.associatedObjectId;
-  let associatedObjectType = req.query.associatedObjectType;
-  let portalId = req.query.portalId;
+  if ( !isValid(req) )
+    res.sendStatus(403)
+  else
+  {
+    
+    let userId = req.query.userId;
+    let userEmail = req.query.userEmail;
+    let associatedObjectId = req.query.associatedObjectId;
+    let associatedObjectType = req.query.associatedObjectType;
+    let portalId = req.query.portalId;
 
-  let clientSecret = process.env.CLIENT_SECRET;
-  let httpMethod = 'GET';
-
-  let sourceString = clientSecret + httpMethod + req.query;
-  let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
-  console.log('Hash--------------', hash)
-  // let httpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&associatedObjectId=${associatedObjectId}&associatedObjectType=${associatedObjectType}&portalId=${portalId}&token=${hash}`;
-  let httpURI = 'https://crm.easyworkforce.cloud/';
-  console.log('URL to new quote--------------', httpURI)
-  var options = {
-    results: [
-      {
-        quote_name: "Sample Yoan-quote",
-        objectId: 232,
-        title: 'Test-Yoan',
-        link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
-        properties: [
-          {
-            label: "Seller",
-            dataType: "EMAIL",
-            value: "ybell@easyworkforce.com"
-          },         
-          {
-            label: "Amount",
-            dataType: "CURRENCY",
-            value: "150",
-            currencyCode: "USD"
-          }
-        ],
-        actions: [
-          {
-            type: "IFRAME",
-            width: 890,
-            height: 748,
-            uri: "https://tools.hubteam.com/integrations-iframe-test-app",
-            label: "Edit"
-          },
-          {
-            type: "CONFIRMATION_ACTION_HOOK",
-            confirmationMessage: "Are you sure you want to delete this quote",
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
-            httpMethod: "DELETE",
-            uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
-            label: "Delete"
-          }
-        ]
-      }  
-    ],
-    primaryAction: {
-      type: "IFRAME",
-      width: 1500,
-      height: 1500,
-      uri: httpURI,
-      label: "Create CRM Quote"
+    let iframeHttpURI = 'https://crm.easyworkforce.cloud/';
+    
+    console.log( 'URL to new quote--------------', httpURI )
+    var options = {
+      results: [
+        {
+          quote_name: "Sample Yoan-quote",
+          objectId: 232,
+          title: 'Test-Yoan',
+          link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
+          properties: [
+            {
+              label: "Seller",
+              dataType: "EMAIL",
+              value: "ybell@easyworkforce.com"
+            },
+            {
+              label: "Amount",
+              dataType: "CURRENCY",
+              value: "150",
+              currencyCode: "USD"
+            }
+          ],
+          actions: [
+            {
+              type: "IFRAME",
+              width: 890,
+              height: 748,
+              uri: "https://tools.hubteam.com/integrations-iframe-test-app",
+              label: "Edit"
+            },
+            {
+              type: "CONFIRMATION_ACTION_HOOK",
+              confirmationMessage: "Are you sure you want to delete this quote",
+              confirmButtonText: "Yes",
+              cancelButtonText: "No",
+              httpMethod: "DELETE",
+              uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
+              label: "Delete"
+            }
+          ]
+        }
+      ],
+      primaryAction: {
+        type: "IFRAME",
+        width: 1500,
+        height: 1500,
+        uri: iframeHttpURI,
+        label: "Create CRM Quote"
+      }
     }
+    return res.json( options );
   }
-  return res.json(options);
+} );
+
+
+app.get( '/company-detail', function ( req, res )
+{
+
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
+   
+    let userId = req.query.userId;
+    let userEmail = req.query.userEmail;
+    let associatedObjectId = req.query.associatedObjectId;
+    let associatedObjectType = req.query.associatedObjectType;
+    let portalId = req.query.portalId;
+    let associatedObjectTypeProperties = req.query.associatedHubSpotObjectTypeProperties
+console.log('Properties ------',associatedObjectTypeProperties)
+    var options = {
+      results: [
+        {
+          objectId: 26785,
+          title: 'Test-Yoan',
+          // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
+          properties: [
+            {
+              label: "License Information",
+              dataType: "STRING",
+              value: "Time & Attendance Software (TAH-JMX) for 65 users"
+            },         
+            {
+              label: "Max Users",
+              dataType: "NUMERIC",
+              value: "65",
+            },
+            {
+              label: "Service Balance",
+              dataType: "CURRENCY",
+              currencyCode: "USD",
+              value: "195",
+            },
+            {
+              label: "Monthly amount",
+              dataType: "CURRENCY",
+              currencyCode: "USD",
+              value: "195",
+            }
+          ],
+          actions: [
+            {
+              type: "IFRAME",
+              width: 890,
+              height: 748,
+              uri: "https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785",
+              label: "more details"
+            }
+          ]
+        }  
+      ],
+      // primaryAction: {
+      //   type: "IFRAME",
+      //   width: 1500,
+      //   height: 1500,
+      //   uri: httpURI,
+      //   label: "Create CRM Quote"
+      // }
+    }
+    return res.json(options);
+  }
+ 
 } );
 
 
