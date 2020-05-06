@@ -225,8 +225,7 @@ app.get( '/quote', function ( request, response )
     results: [
       {
         "quote_name": "Quote Yoan-test",
-        "created": "2016-09-15",
-        "objectId": 5
+       
       }
     //   {
     //   quote_title: "Yoan-test-quote",
@@ -247,16 +246,12 @@ app.get( '/quote', function ( request, response )
 
 app.get( '/deal-type', async ( req, res ) => 
 { 
-  if ( isAuthorized( req.sessionID ) )
-  {
     const accessToken = await getAccessToken( req.sessionID );
     const objects = await getExistingObjectDeal(accessToken );
     res.write( `<a href="/"><h3>Back</h3></a>` );
+    res.write( `<div id='content'>${objects}</div>` );
     console.log(objects)
-  } else
-  {
-    res.write( `<a href="/install"><h3>Install the app</h3></a>` );
-  }
+  
 })
 
 const getExistingObjectDeal = async ( accessToken, id = 1956502869 ) => { 
