@@ -246,7 +246,6 @@ app.get( '/quote', function ( request, response )
 
 app.get( '/deal-type', async ( req, res ) => 
 { 
-    const accessToken = await getAccessToken( req.sessionID );
     const objects = await getExistingObjectDeal(accessToken );
     res.write( `<a href="/"><h3>Back</h3></a>` );
     res.write( `<div id='content'>${objects}</div>` );
@@ -254,7 +253,7 @@ app.get( '/deal-type', async ( req, res ) =>
   
 })
 
-const getExistingObjectDeal = async ( accessToken, id = 1956502869 ) => { 
+const getExistingObjectDeal = async ( accessToken, id = 100777 ) => { 
   try
   { 
     const headers = {
@@ -262,7 +261,7 @@ const getExistingObjectDeal = async ( accessToken, id = 1956502869 ) => {
       'Content-Type': 'application/json'
     };
     console.log('===> request.get(\'https://api.hubapi.com/extensions/sales-objects/v1/object-types/\')');
-    const result = await request.get('https://api.hubapi.com/extensions/sales-objects/v1/object-types/'+100777+'?hapikey='+config.devApiKey, {
+    const result = await request.get('https://api.hubapi.com/extensions/sales-objects/v1/object-types/'+id+'?hapikey='+config.devApiKey, {
       headers: headers,      
     } );
     console.log('Getting deal info' , JSON.stringify(result, null,2))
