@@ -227,14 +227,44 @@ app.get( '/quote', function ( request, response )
         quote_name: "Quote Yoan-test",
         objectId: 232,
         title: 'Test-Yoan',
-        link:'https://enigmatic-tor-68993.herokuapp.com/test-yoan'
-       
-      }
-    //   {
-    //   quote_title: "Yoan-test-quote",
-    //   purchase_terms: "Sample terms",
-    //   comments_buyer: "Sample Comments"
-    // }
+        link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
+        properties: [
+          {
+            label: "Resolved by",
+            dataType: "EMAIL",
+            value: "ijones@hubspot.com"
+          },
+          {
+            label: "Resolution type",
+            dataType: "STRING",
+            value: "Referred to documentation"
+          },
+          {
+            label: "Amount",
+            dataType: "CURRENCY",
+            value: "150",
+            currencyCode: "USD"
+          }
+        ],
+        actions: [
+          {
+            type: "IFRAME",
+            width: 890,
+            height: 748,
+            uri: "https://tools.hubteam.com/integrations-iframe-test-app",
+            label: "Edit"
+          },
+          {
+            type: "CONFIRMATION_ACTION_HOOK",
+            confirmationMessage: "Are you sure you want to delete this quote",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            httpMethod: "DELETE",
+            uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
+            label: "Delete"
+          }
+        ]
+      }  
     ],
     primaryAction: {
       type: "IFRAME",
