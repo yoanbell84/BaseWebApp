@@ -222,6 +222,7 @@ app.post( '/webhock', ( req, res ) =>
 const isValid = (req) =>
 {
   console.log( 'Request ===============>', req.headers );
+  console.log( 'Request ===============>', req.url );
   let result = true; 
   if ( !req.headers[ 'x-hubspot-signature' ] ) result = false;
   else if ( req.headers[ 'x-hubspot-signature' ] )
