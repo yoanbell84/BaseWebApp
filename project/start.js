@@ -226,22 +226,13 @@ const isValid = (req) =>
   if ( !req.headers[ 'x-hubspot-signature' ] ) result = false;
   else if ( req.headers[ 'x-hubspot-signature' ] )
   { 
-
-    console.log( 'Request ===============>', req.headers );
-    console.log( 'Request ===============>', req.url );
     var requestSignature = req.headers[ 'x-hubspot-signature' ];
     let clientSecret = process.env.CLIENT_SECRET;
     let httpMethod = req.method;
     let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.url;
    
     let sourceString = clientSecret + httpMethod + httpURI;
-    let sourceString2 = clientSecret + httpMethod + 'https://enigmatic-tor-68993.herokuapp.com/company-detail';
     let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
-    let hash2 = crypto.createHash( 'sha256' ).update( sourceString2 ).digest( 'hex' );
-    
-    console.log( 'Signature ===========>', requestSignature );
-    console.log( ' HASH with full url ===========>', hash )
-    console.log(' HASH with url ===========>' , hash2)
    
     if ( hash !== requestSignature )
       result = false;
@@ -289,8 +280,8 @@ app.get( '/quote', function ( req, res )
           actions: [
             {
               type: "IFRAME",
-              width: 890,
-              height: 748,
+              width: 1500,
+              height: 1500,
               uri: "https://tools.hubteam.com/integrations-iframe-test-app",
               label: "Edit"
             },
@@ -332,33 +323,45 @@ app.get( '/company-detail', function ( req, res )
     let associatedObjectId = req.query.associatedObjectId;
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
-    let associatedObjectTypeProperties = req.query.associatedHubSpotObjectTypeProperties
-console.log('Properties ------',associatedObjectTypeProperties)
+    let companyCode = req.query.company_code;
+
     var options = {
       results: [
         {
           objectId: 26785,
-          title: 'Test-Yoan',
-          link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
+          title: '1 Voice',
+          // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
           properties: [
             {
               label: "License Information",
               dataType: "STRING",
-              value: "Time & Attendance Software (TAH-JMX) for 65 users"
-            },         
+              value: "TimeLogix Software (TLH-SM) for 10 users"
+            }, 
+            {
+              label: "License Status",
+              dataType: "STATUS",
+              value: "Active",
+              optionType: "SUCCESS"
+            },
+            {
+              label: "Expiration",
+              dataType: "DATE",
+              value: "2020-05-30"
+              
+            },
             {
               label: "Max Users",
               dataType: "NUMERIC",
-              value: 65,
+              value: 10,
             },
             {
-              label: "Service Balance",
+              label: "Monthly amount",
               dataType: "CURRENCY",
               currencyCode: "USD",
               value: 195,
             },
             {
-              label: "Monthly amount",
+              label: "Service Balance",
               dataType: "CURRENCY",
               currencyCode: "USD",
               value: 195,
@@ -367,9 +370,9 @@ console.log('Properties ------',associatedObjectTypeProperties)
           actions: [
             {
               type: "IFRAME",
-              width: 890,
-              height: 748,
-              uri: "https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785",
+              width: 1500,
+              height: 1500,
+              uri: "https://dev-ezcrm.easyworkforce.cloud/customers?company-code="+companyCode,
               label: "more details"
             }
           ]
