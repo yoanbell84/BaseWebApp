@@ -5,17 +5,16 @@ const request = require( 'request-promise-native' );
 const redis = require( 'redis' );
 var app = express();
 app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded()); // to support URL-encoded bodies
-const crypto = require( 'crypto' );
-// let RedisStore = require( 'connect-redis' )( session );
-// let redisClient = redis.createClient();
+app.use( express.urlencoded({ extended: true }) ); // to support URL-encoded bodies
 
+const crypto = require( 'crypto' );
+const config = require('../config');
 const PORT = (process.env.PORT || 5000);
 
 const refreshTokenStore = {};
 const accessTokenCache = new NodeCache({ deleteOnExpire: true });
 
-if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
+if (!config.clientId || !config.clientSecret) {
     throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
 }
 
@@ -30,19 +29,20 @@ if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
 
 // Replace the following with the values from your app auth config, 
 // or set them as environment variables before running.
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const CLIENT_ID = config.clientId;
+const CLIENT_SECRET = config.clientSecret;
 
 
 // Scopes for this app will default to `contacts`
 // To request others, set the SCOPE environment variable instead
 let SCOPES = ['contacts'];
-if (process.env.SCOPE) {
-    SCOPES = (process.env.SCOPE.split(/ |, ?|%20/)).join(' ');
+if (config.scope) {
+    SCOPES = (config.scope.split(/ |, ?|%20/)).join(' ');
 }
 
 // On successful install, users will be redirected to /oauth-callback
-const REDIRECT_URI = process.env.MODE == 'debug' ? `http://localhost:${ PORT }/oauth-callback` : 'https://enigmatic-tor-68993.herokuapp.com/oauth-callback';
+const REDIRECT_URI = config.nodeMode == 'DEBUG' ? `http://localhost:${ PORT }/oauth-callback` : 'https://enigmatic-tor-68993.herokuapp.com/oauth-callback';
+
 
 
 //===========================================================================//
@@ -172,22 +172,22 @@ app.use(express.static(__dirname));
 app.set('views', __dirname + '/html');
 app.set('view engine', 'ejs');
 
-
-app.get('/install', (req, res) => {
-  console.log('');
-  console.log('=== Initiating OAuth 2.0 flow with HubSpot ===');
-  console.log('');
-  console.log("===> Step 1: Redirecting user to your app's OAuth URL");
-  res.redirect(authUrl);
-  console.log('===> Step 2: User is being prompted for consent by HubSpot');
+app.get( '/', ( req, res ) => 
+{
+  if ( !isAuthorized( req.sessionID ) )
+  {
+    res.redirect( authUrl );
+  }
+  else
+  { 
+    res.render( 'pages/index' );
+  }
+  res.end();
+  
 } );
 
-app.get('/', function(request, response) {
-  response.render('pages/index');
-} );
 
-
-app.get( '/new-quote', function ( request, response )
+app.get( '/new-quote', ( request, response ) => 
 {
   response.render( 'pages/quote' );
   // if ( isAuthorized( request.sessionID ) )
@@ -223,6 +223,11 @@ app.get( '/quote', function ( request, response )
 {
   var options = {
     results: [
+      {
+        "title": "API-22: APIs working too fast",
+        "link": "http://example.com/1",
+        "created": "2016-09-15",
+      }
     //   {
     //   quote_title: "Yoan-test-quote",
     //   purchase_terms: "Sample terms",
@@ -238,8 +243,41 @@ app.get( '/quote', function ( request, response )
     }
   }
   return response.json(options);
-});
+} );
 
+app.get( '/deal-type', async ( req, res ) => 
+{ 
+  if ( isAuthorized( req.sessionID ) )
+  {
+    const accessToken = await getAccessToken( req.sessionID );
+    const objects = await getExistingObjectDeal(accessToken );
+    res.write( `<a href="/"><h3>Back</h3></a>` );
+    console.log(objects)
+  } else
+  {
+    res.write( `<a href="/install"><h3>Install the app</h3></a>` );
+  }
+})
+
+const getExistingObjectDeal = async ( accessToken, id = 1956502869 ) => { 
+  try
+  { 
+    const headers = {
+      // Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    };
+    console.log('===> request.get(\'https://api.hubapi.com/extensions/sales-objects/v1/object-types/\')');
+    const result = await request.get('https://api.hubapi.com/extensions/sales-objects/v1/object-types/'+id+'?hapikey='+config.devApiKey, {
+      headers: headers,      
+    } );
+    console.log('Getting deal info' , JSON.stringify(result, null,2))
+    // return JSON.parse(result).objects;
+  } catch (e) {
+    console.error( '  > Unable to retrieve deal ===>',e.message );
+    process.exit( 0 );
+    // return JSON.parse(e.response.body);
+  }
+} 
 
 
 app.listen(app.get('port'), function() {
