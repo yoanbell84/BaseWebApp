@@ -224,7 +224,7 @@ app.get( '/quote', function ( request, response )
   var options = {
     results: [
       {
-        "title": "API-22: APIs working too fast",
+        "quote_name": "Quote Yoan-test",
         "link": "http://example.com/1",
         "created": "2016-09-15",
       }
