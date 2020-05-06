@@ -328,7 +328,7 @@ console.log('Properties ------',associatedObjectTypeProperties)
         {
           objectId: 26785,
           title: 'Test-Yoan',
-          // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
+          link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
           properties: [
             {
               label: "License Information",
@@ -338,19 +338,19 @@ console.log('Properties ------',associatedObjectTypeProperties)
             {
               label: "Max Users",
               dataType: "NUMERIC",
-              value: "65",
+              value: 65,
             },
             {
               label: "Service Balance",
               dataType: "CURRENCY",
               currencyCode: "USD",
-              value: "195",
+              value: 195,
             },
             {
               label: "Monthly amount",
               dataType: "CURRENCY",
               currencyCode: "USD",
-              value: "195",
+              value: 195,
             }
           ],
           actions: [
