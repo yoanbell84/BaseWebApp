@@ -230,7 +230,7 @@ const isValid = (req) =>
     var requestSignature = req.headers[ 'x-hubspot-signature' ];
     let clientSecret = process.env.CLIENT_SECRET;
     let httpMethod = req.method;
-    let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.req.url;
+    let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.url;
    
     let sourceString = clientSecret + httpMethod + httpURI;
     let sourceString2 = clientSecret + httpMethod + 'https://enigmatic-tor-68993.herokuapp.com/company-detail';
