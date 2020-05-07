@@ -190,7 +190,7 @@ app.get( '/', ( req, res ) =>
 app.get( '/new-quote', ( req, res ) => 
 {
 
-  console.log('Request Query----------', req.query)
+  // console.log('Request Query----------', req.query)
   res.render( 'pages/quote' );
  
 } );
@@ -254,7 +254,7 @@ app.get( '/quote', function ( req, res )
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
 
-    let iframeHttpURI = 'https://crm.easyworkforce.cloud/';
+    let iframeHttpURI = 'https://enigmatic-tor-68993.herokuapp.com/new-quote';
     
     
     var options = {
