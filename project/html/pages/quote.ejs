@@ -3,11 +3,6 @@
     <% include ../helpers/head %>
 </head>
 
-<script>
-  document.getElementById("btn-close").addEventListener("click", function(){
-    window.parent.postMessage(JSON.stringify({'action': 'DONE'}), '*')
-});
-</script>
 <body>
   <!-- the classes 'page-header' and 'btn btn-dark' create bootstrap components.  -->
   <!-- Check out more components here: http://getbootstrap.com/components/ -->
@@ -26,7 +21,7 @@
         <textarea type="text" class="form-control" id="purchase_terms" placeholder="Enter any relevant information about pricing"></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
-      <button type="button" id="btn-close" class="btn btn-primary">Close</button>
+      <button type="button" class="btn btn-primary" onclick="window.parent.postMessage(JSON.stringify({'action': 'DONE'}), '*')">Close</button>
   </form>
 </body>
 
