@@ -256,7 +256,7 @@ app.get( '/quote', function ( req, res )
 
     let iframeHttpURI = 'https://crm.easyworkforce.cloud/';
     
-    console.log( 'URL to new quote--------------', httpURI )
+    
     var options = {
       results: [
         {
