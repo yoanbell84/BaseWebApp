@@ -413,11 +413,11 @@ app.get( '/new-quote', ( req, res ) =>
 
 app.post( '/create-quote', async (req,res) => {
  
-
+  console.log('Request =====================>',req)
     let dealId = req.body.dealId || 1978776187;
     let lineIds, quoteId = null;
   const accessToken = await getAccessToken( req.sessionID );
-  console.log('Access Token', accessToken)
+
     quoteId = await createQuote( accessToken ).then( result =>
     { 
       console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
