@@ -411,7 +411,7 @@ app.get( '/new-quote', ( req, res ) =>
  
 } );
 
-app.post( '/create-quote', async (req,res) => {
+app.get( '/create-quote', async (req,res) => {
  
 
   if ( isAuthorized( req.sessionID ) )
