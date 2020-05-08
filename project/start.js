@@ -418,33 +418,33 @@ app.post( '/create-quote', async (req,res) => {
     let lineIds, quoteId = null;
   const accessToken = await getAccessToken( req.sessionID );
 
-    let result = await createQuote( accessToken ).then( result =>
+    let result = await createQuote( accessToken ).then( qResult =>
     { 
       let finalResult = true;
       console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
-      quoteId = result && result.id;
+      quoteId = qResult && qResult.id;
 
       finalResult = !quoteId && false; 
 
-      await createLineItems( accessToken ).then( result =>
+      await createLineItems( accessToken ).then( itemsResult =>
       {
           console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
-          console.log('Line Items=====>' , result)
-          lineIds = result && result.length > 0 && result.map( r => r.Id );
+          console.log('Line Items=====>' , itemsResult)
+          lineIds = itemsResult && itemsResult.length > 0 && result.map( r => r.Id );
       });
       finalResult = !lineIds && false
       
-      await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( result =>
+      await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
         {
           console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
-          console.log( 'Associate Line Items=====>', result )
+          console.log( 'Associate Line Items=====>', itemsDealResult )
         
         });
         
-      await asociateQuotesWithDeal( accessToken , dealId, [quoteId] ).then( result =>
+      await asociateQuotesWithDeal( accessToken , dealId, [quoteId] ).then( quoteDealResult =>
         {
           console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
-          console.log('Associate Quote=====>' , result)
+          console.log('Associate Quote=====>' , quoteDealResult)
       } );
       return finalResult;
     
