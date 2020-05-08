@@ -415,16 +415,17 @@ app.post( '/create-quote', async (req,res) => {
  
   console.log('Request =====================>',req)
     let dealId = req.body.dealId || 1978776187;
-    let lineIds, quoteId = null;
+  
   const accessToken = await getAccessToken( req.sessionID );
 
     let result = await createQuote( accessToken ).then( qResult =>
     { 
+      let lineIds, quoteId = null;
       let finalResult = true;
       console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
       quoteId = qResult && qResult.id;
 
-      finalResult = !quoteId && false; 
+      if ( !quoteId ) finalResult = false;      
 
       await createLineItems( accessToken ).then( itemsResult =>
       {
@@ -432,7 +433,7 @@ app.post( '/create-quote', async (req,res) => {
           console.log('Line Items=====>' , itemsResult)
           lineIds = itemsResult && itemsResult.length > 0 && result.map( r => r.Id );
       });
-      finalResult = !lineIds && false
+      if ( !lineIds ) finalResult = false;
       
       await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
         {
