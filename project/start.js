@@ -414,8 +414,6 @@ app.get( '/new-quote', ( req, res ) =>
 app.get( '/create-quote', async (req,res) => {
  
 
-  if ( isAuthorized( req.sessionID ) )
-  {
     let dealId = req.query.dealId;
     let lineIds, quoteId = null;
     const accessToken = await getAccessToken( req.sessionID );
@@ -442,7 +440,7 @@ app.get( '/create-quote', async (req,res) => {
     } );
 
     res.statusCode(200);
-  }
+ 
 
 })
 
