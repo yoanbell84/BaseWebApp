@@ -414,8 +414,8 @@ app.get( '/new-quote', ( req, res ) =>
 app.post( '/create-quote', async (req,res) => {
  
   
-  if ( isAuthorized( req.sessionID ) )
-  {
+  // if ( isAuthorized( req.sessionID ) )
+  // {
     let dealId = req.body.dealId;
     let lineIds, quoteId = null;
     let finalResult = true;
@@ -454,9 +454,7 @@ app.post( '/create-quote', async (req,res) => {
       { 
         res.sendStatus( 400 );
       }
-    }
-  
- 
+    
 })
 
 
