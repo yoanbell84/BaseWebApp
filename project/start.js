@@ -426,12 +426,12 @@ app.post( '/create-quote', async (req,res) => {
 
       finalResult = !quoteId && false; 
 
-      lineIds = await createLineItems( accessToken ).then( result =>
-        {
+      await createLineItems( accessToken ).then( result =>
+      {
           console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
           console.log('Line Items=====>' , result)
-            return result && result.length > 0 && result.map( r => r.Id );
-        } );
+          lineIds = result && result.length > 0 && result.map( r => r.Id );
+      });
       finalResult = !lineIds && false
       
       await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( result =>
