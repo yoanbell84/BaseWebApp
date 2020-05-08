@@ -184,9 +184,7 @@ const createQuote = async ( accessToken ) =>
     },
     body: {
       properties: {
-        "hs_createdate": "2020-05-01T23:57:00.425Z",
         "hs_expiration_date": "2020-07-31T03:59:59.999Z",
-        "hs_lastmodifieddate": "2020-05-01T23:57:14.555Z",
         "hs_status": "APPROVAL_NOT_NEEDED",
         "hs_title": "Test Create Quote"
       }
@@ -424,7 +422,7 @@ app.post( '/create-quote', async (req,res) => {
     quoteId = await createQuote( accessToken ).then( qResult =>
     { 
       console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
-      console.log( 'Quote =====>', qResult )
+      console.log( 'Quote =====>', JSON.stringify(qResult, null , 2) )
         return qResult && qResult.id;
     } );
   
