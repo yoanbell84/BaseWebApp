@@ -413,45 +413,49 @@ app.get( '/new-quote', ( req, res ) =>
 
 app.post( '/create-quote', async (req,res) => {
  
-  console.log('Request =====================>',req)
-    let dealId = req.body.dealId || 1978776187;
+  
+  if ( isAuthorized( req.sessionID ) )
+  {
+    let dealId = req.body.dealId;
     let lineIds, quoteId = null;
     let finalResult = true;
-  const accessToken = await getAccessToken( req.sessionID );
+    const accessToken = await getAccessToken( req.sessionID );
 
-  quoteId = await createQuote( accessToken ).then( qResult =>
-  { 
-    console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
-    console.log( 'Quote =====>', qResult )
-      return qResult && qResult.id;
-  } );
+    quoteId = await createQuote( accessToken ).then( qResult =>
+    { 
+      console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
+      console.log( 'Quote =====>', qResult )
+        return qResult && qResult.id;
+    } );
   
-  if ( quoteId )
-  {
-    lineIds = await createLineItems( accessToken ).then( itemsResult =>
+    if ( quoteId )
     {
-      console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
-      console.log( 'Line Items=====>', itemsResult )
-      return itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results.map( r => r.Id );
-    } );
-      
-    let lineItemsDeals = lineIds && lineIds.length > 0 && await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
-    {
-      console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
-      console.log( 'Associate Line Items=====>', itemsDealResult )
-    } );
+      lineIds = await createLineItems( accessToken ).then( itemsResult =>
+      {
+        console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
+        console.log( 'Line Items=====>', itemsResult )
+        return itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results.map( r => r.Id );
+      } );
         
-    let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
-    {
-      console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
-      console.log( 'Associate Quote=====>', quoteDealResult )
-    } );
-    res.sendStatus( 200 );
-  }
-  else
-  { 
-    res.sendStatus( 400 );
-  }
+      let lineItemsDeals = lineIds && lineIds.length > 0 && await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
+      {
+        console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
+        console.log( 'Associate Line Items=====>', itemsDealResult )
+      } );
+          
+      let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
+      {
+        console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
+        console.log( 'Associate Quote=====>', quoteDealResult )
+      } );
+      res.sendStatus( 200 );
+    }
+    else
+      { 
+        res.sendStatus( 400 );
+      }
+    }
+  
  
 })
 
