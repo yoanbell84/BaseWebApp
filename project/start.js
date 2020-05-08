@@ -407,14 +407,14 @@ app.get( '/new-quote', ( req, res ) =>
 {
 
   // console.log('Request Query----------', req.query)
-  res.render( 'pages/quote' );
+  res.render( 'pages/quote', {dealId: req.query.dealId});
  
 } );
 
-app.get( '/create-quote', async (req,res) => {
+app.post( '/create-quote', async (req,res) => {
  
 
-    let dealId = req.query.dealId || 1978776187;
+    let dealId = req.body.dealId || 1978776187;
     let lineIds, quoteId = null;
   const accessToken = await getAccessToken( req.sessionID );
   console.log('Access Token', accessToken)
@@ -505,7 +505,7 @@ app.get( '/quote', function ( req, res )
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
 
-    let iframeHttpURI = `https://enigmatic-tor-68993.herokuapp.com/create-quote?dealId=${associatedObjectId}`;
+    let iframeHttpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?dealId=${associatedObjectId}`;
     
     
     var options = {
