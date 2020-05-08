@@ -164,6 +164,222 @@ const isAuthorized = (userId) => {
   return refreshTokenStore[userId] ? true : false;
 };
 
+
+//====================================================//
+//    Creating New Quote                               //
+//====================================================//
+
+const createQuote = async ( accessToken ) =>
+{
+  console.log( '' );
+  console.log( '=== Creating New Quote from HubSpot using the access token ===' );
+  console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/objects/quotes\')' );
+
+  var options = {
+    url: 'https://api.hubapi.com/crm/v3/objects/quotes',
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${ accessToken }`,
+      'Content-Type': 'application/json'
+    },
+    body: {
+      properties: {
+        "hs_createdate": "2020-05-01T23:57:00.425Z",
+        "hs_expiration_date": "2020-07-31T03:59:59.999Z",
+        "hs_lastmodifieddate": "2020-05-01T23:57:14.555Z",
+        "hs_status": "APPROVAL_NOT_NEEDED",
+        "hs_title": "Test Create Quote"
+      }
+    },
+    json: true
+  }
+
+  const result = await request( options ).then( result => result ).catch( err => err.response.body );
+ 
+  return result;
+};
+
+
+
+//====================================================//
+//    Creating New Line Items                         //
+//====================================================//
+
+const createLineItems = async ( accessToken ) =>
+{
+  console.log( '' );
+  console.log( '=== Creating Line Items from HubSpot using the access token ===' );
+  console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/objects/line_items/batch/create\')' );
+
+
+  var options = {
+    url: 'https://api.hubapi.com/crm/v3/objects/line_items/batch/create',
+    // url: 'https://api.hubapi.com/crm-objects/v1/objects/line_items/batch-create',
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${ accessToken }`,
+      'Content-Type': 'application/json'
+    },
+    body: {
+        inputs: [
+        {
+          properties: {
+            hs_product_id: 101043990,
+            quantity: 2,
+            price: 899,
+            name: 'Xenio-500'
+          }  
+        },
+        {
+          properties: {
+            hs_product_id: 101043994,
+            quantity: 3,
+            price: 749.99,
+            name: 'Xenio-50'
+          },
+        }
+      ]
+    },
+    //   [
+    //     { name:'hs_product_id' , value: 101043990 },
+    //     { name:'quantity' , value: 2},
+    //     { name:'price' , value: 899},
+    //     { name:'name' , value:'Xenio-500'}
+        
+    //   ],
+    //   [
+    //     { name:'hs_product_id' , value: 101043994 },
+    //     { name:'quantity' , value: 4},
+    //     { name:'price' , value: 749},
+    //     { name:'name' , value:'Xenio-50'}
+    //   ]
+    // ],
+      // inputs: [
+      //   {
+      //     properties: {
+      //       hs_product_id: 101043990,
+      //       quantity: 2,
+      //       price: 899,
+      //       name: 'Xenio-500'
+      //     }  
+      //   },
+      //   {
+      //     properties: {
+      //       hs_product_id: 101043994,
+      //       quantity: 3,
+      //       price: 749.99,
+      //       name: 'Xenio-50'
+      //     },
+      //   }
+      // ]
+    //},
+    json: true
+  }
+
+  const result = await request( options ).then( result => result ).catch( err => err.response.body );
+ 
+  return result;
+};
+
+//====================================================//
+//    Asociate New Line Items to a deal               //
+//====================================================//
+
+
+const asociateLineItemsWithDeal = async ( accessToken, dealId,lineItemIds ) =>
+{
+  console.log( '' );
+  console.log( '=== Asociate Line Items With Deal from HubSpot using the access token ===' );
+  console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/associations/line_items/deal/batch/create\')' );
+
+  var options = {
+    // url: `https://api.hubapi.com/crm-associations/v1/associations/create-batch`,
+    url:'https://api.hubapi.com/crm/v3/associations/line_items/deal/batch/create',
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${ accessToken }`,
+      'Content-Type': 'application/json'
+    },
+    // body:lineItemIds.map( element => {
+    //     return {
+    //       fromObjectId:element,
+    //       toObjectId: dealId,
+    //       category: "HUBSPOT_DEFINED",
+    //       definitionId: 20
+    //     }
+    //   }),
+    body: {
+      inputs:lineItemIds.map( element =>
+        {
+        return {
+          from: {
+            id:element
+          },
+          to: {
+            id:dealId
+          },
+          type:"line_item_to_deal"          
+        }
+      }),
+    },
+    json: true
+  }
+
+  const result = await request( options ).then( result => result ).catch( err => err.response.body );
+ 
+  return result;
+};
+ 
+
+//====================================================//
+//    Asociate Quote to a deal               //
+//====================================================//
+
+
+const asociateQuotesWithDeal = async ( accessToken, dealId, quoteIds ) =>
+{
+  console.log( '' );
+  console.log( '=== Asociate Quote With Deal from HubSpot using the access token ===' );
+  console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/associations/quote/deal/batch/create\')' );
+
+  var options = {
+    // url: `https://api.hubapi.com/crm-associations/v1/associations/create-batch`,
+    url:'https://api.hubapi.com/crm/v3/associations/quote/deal/batch/create',
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${ accessToken }`,
+      'Content-Type': 'application/json'
+    },
+    // body:lineItemIds.map( element => {
+    //     return {
+    //       fromObjectId:element,
+    //       toObjectId: dealId,
+    //       category: "HUBSPOT_DEFINED",
+    //       definitionId: 20
+    //     }
+    //   }),
+    body: {
+      inputs:quoteIds.map( element =>
+        {
+        return {
+          from: {
+            id:element
+          },
+          to: {
+            id:dealId
+          },
+          type:"quote_to_deal"          
+        }
+      }),
+    },
+    json: true
+  }
+
+  const result = await request( options ).then( result => result ).catch( err => err.response.body );
+ 
+  return result;
+};
+
 app.set('port', PORT);
 
 app.use(express.static(__dirname));
@@ -194,6 +410,42 @@ app.get( '/new-quote', ( req, res ) =>
   res.render( 'pages/quote' );
  
 } );
+
+app.post( '/create-quote', async (req,res) => {
+ 
+
+  if ( isAuthorized( req.sessionID ) )
+  {
+    let dealId = req.query.dealId;
+    let lineIds, quoteId = null;
+    const accessToken = await getAccessToken( req.sessionID );
+    quoteId = await createQuote( accessToken ).then( result =>
+    { 
+      console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
+      return result && result.id;
+    });
+
+    lineIds = await createLineItems( accessToken ).then( result =>
+    {
+        console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
+        return result && result.length > 0 && result.map( r => r.objectId );
+    } );
+  
+    await asociateLineItemsWithDeal( accessToken , dealId, lineIds ).then( result =>
+    {
+      console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
+    });
+    
+    await asociateQuotesWithDeal( accessToken , dealId, [quoteId] ).then( result =>
+    {
+      console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
+    } );
+
+    res.statusCode(200);
+  }
+
+})
+
 
 app.post( '/webhock', ( req, res ) =>
 {
@@ -254,7 +506,7 @@ app.get( '/quote', function ( req, res )
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
 
-    let iframeHttpURI = 'https://enigmatic-tor-68993.herokuapp.com/new-quote';
+    let iframeHttpURI = `https://enigmatic-tor-68993.herokuapp.com/create-quote?dealId=${associatedObjectId}`;
     
     
     var options = {
