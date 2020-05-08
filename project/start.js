@@ -421,32 +421,38 @@ app.post( '/create-quote', async (req,res) => {
 
   quoteId = await createQuote( accessToken ).then( qResult =>
   { 
-      console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
+    console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
+    console.log( 'Quote =====>', qResult )
       return qResult && qResult.id;
-  });
-    
-  lineIds = await createLineItems( accessToken ).then( itemsResult =>
-  {
-    console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
-    console.log( 'Line Items=====>', itemsResult )
-    return itemsResult && itemsResult.length > 0 && result.map( r => r.Id );
   } );
   
-  let lineItemsDeals = lineIds && await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
+  if ( quoteId )
   {
+    lineIds = await createLineItems( accessToken ).then( itemsResult =>
+    {
+      console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
+      console.log( 'Line Items=====>', itemsResult )
+      return itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results.map( r => r.Id );
+    } );
+      
+    let lineItemsDeals = lineIds && lineIds.length > 0 && await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
+    {
       console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
-      console.log( 'Associate Line Items=====>', itemsDealResult )    
-  });
-    
-  let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken , dealId, [quoteId] ).then( quoteDealResult =>
+      console.log( 'Associate Line Items=====>', itemsDealResult )
+    } );
+        
+    let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
     {
       console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
-      console.log('Associate Quote=====>' , quoteDealResult)
-  } );
-
-  res.statusCode( 200 );
+      console.log( 'Associate Quote=====>', quoteDealResult )
+    } );
+    res.sendStatus( 200 );
+  }
+  else
+  { 
+    res.sendStatus( 400 );
+  }
  
-
 })
 
 
