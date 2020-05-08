@@ -150,7 +150,7 @@ const refreshAccessToken = async (userId) => {
   return await exchangeForTokens(userId, refreshTokenProof);
 };
 
-const getAccessToken = async (userId) => {
+const getAccessToken =  async (userId) => {
   // If the access token has expired, retrieve
   // a new one using the refresh token
   if (!accessTokenCache.get(userId)) {
@@ -414,9 +414,10 @@ app.get( '/new-quote', ( req, res ) =>
 app.get( '/create-quote', async (req,res) => {
  
 
-    let dealId = req.query.dealId;
+    let dealId = req.query.dealId || 1978776187;
     let lineIds, quoteId = null;
-    const accessToken = await getAccessToken( req.sessionID );
+  const accessToken = await getAccessToken( req.sessionID );
+  console.log('Access Token', accessToken)
     quoteId = await createQuote( accessToken ).then( result =>
     { 
       console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
