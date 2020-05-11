@@ -457,7 +457,7 @@ app.post( '/create-quote', async (req,res) => {
       lineIds = await createLineItems( accessToken ).then( itemsResult =>
       {
         console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
-        console.log( 'Line Items=====>', itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results.map( r => r.Id ) )
+        console.log( 'Line Items=====>', itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results)
         return itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results.map( r => r.Id );
       } );
   
