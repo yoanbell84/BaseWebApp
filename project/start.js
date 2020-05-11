@@ -12,7 +12,24 @@ const config = require('../config');
 const PORT = (process.env.PORT || 5000);
 
 const refreshTokenStore = {};
-const accessTokenCache = new NodeCache({ deleteOnExpire: true });
+const accessTokenCache = new NodeCache( { deleteOnExpire: true } );
+
+const productList = [
+  {
+      hs_product_id: 101043994,
+      quantity: 3,
+      price: 749.99,
+      name: 'Xenio-50'
+   
+  }, {
+   
+      hs_product_id: 101043992,
+      quantity: 3,
+      price: 20,
+      name: 'RFID -10C'
+   
+  }
+]
 
 if (!config.clientId || !config.clientSecret) {
     throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
@@ -219,26 +236,10 @@ const createLineItems = async ( accessToken ) =>
       'Content-Type': 'application/json'
     },
     body: {
-        inputs: [
-        {
-          properties: {
-            hs_product_id: 101043990,
-            quantity: 2,
-            price: 899,
-            name: 'Xenio-500'
-          }  
-        },
-        {
-          properties: {
-            hs_product_id: 101043994,
-            quantity: 3,
-            price: 749.99,
-            name: 'Xenio-50'
-          },
-        }
-      ]
+        inputs: productList
     },
-    //   [
+    
+    //  body:   [
     //     { name:'hs_product_id' , value: 101043990 },
     //     { name:'quantity' , value: 2},
     //     { name:'price' , value: 899},
@@ -252,25 +253,7 @@ const createLineItems = async ( accessToken ) =>
     //     { name:'name' , value:'Xenio-50'}
     //   ]
     // ],
-      // inputs: [
-      //   {
-      //     properties: {
-      //       hs_product_id: 101043990,
-      //       quantity: 2,
-      //       price: 899,
-      //       name: 'Xenio-500'
-      //     }  
-      //   },
-      //   {
-      //     properties: {
-      //       hs_product_id: 101043994,
-      //       quantity: 3,
-      //       price: 749.99,
-      //       name: 'Xenio-50'
-      //     },
-      //   }
-      // ]
-    //},
+  
     json: true
   }
 
@@ -410,6 +393,49 @@ app.get( '/new-quote', ( req, res ) =>
  
 } );
 
+
+//====================================================//
+//   Update a deal                                    //
+//====================================================//
+
+
+const UpdateDeal = async ( accessToken,dealId, finalAmout = 0) =>
+{
+  console.log( '' );
+  console.log( `=== Update Deal ${dealId} from HubSpot using the access token ===` );
+  console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/objects/deals/:dealId\')' );
+
+  var options = {
+    url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}`,
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${ accessToken }`,
+      'Content-Type': 'application/json'
+    },
+    body: {
+      // properties: [
+      //   { name: "amount", value: finalAmout },
+      //   { name:'assigned_channel', value: 1},
+      //   { name:'tax', value: 150},
+      //   { name:'shipping', value: 230},
+      //   { name:'max_users', value: 20},
+      //   { name:'dealstage', value: 'qualifiedtobuy'}
+      // ]
+      amount: productList.map( prod => prod.quantity * prod.amount).reduce((a,b) => (a || 0) + (b || 0)),
+      assigned_channel: 1,
+      tax: 150,
+      shipping: 130,
+      max_users: 50,
+      dealstage: 'qualifiedtobuy'
+
+    },
+    json: true
+  }
+
+  const result = await request( options ).then( result => result ).catch( err => console.log(err) );
+ 
+  return result;
+};
 app.post( '/create-quote', async (req,res) => {
  
   
@@ -420,39 +446,45 @@ app.post( '/create-quote', async (req,res) => {
     let finalResult = true;
     const accessToken = await getAccessToken( req.sessionID );
 
-    quoteId = await createQuote( accessToken ).then( qResult =>
-    { 
-      console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
-      console.log( 'Quote =====>', JSON.stringify(qResult, null , 2) )
-        return qResult && qResult.id;
-    } );
+    // quoteId = await createQuote( accessToken ).then( qResult =>
+    // { 
+    //   console.log( '=== Succesfully Created Quote from HubSpot using the access token ===' );
+    //   console.log( 'Quote =====>', JSON.stringify(qResult, null , 2) )
+    //     return qResult && qResult.id;
+    // } );
   
-    if ( quoteId )
-    {
+    
       lineIds = await createLineItems( accessToken ).then( itemsResult =>
       {
         console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
         console.log( 'Line Items=====>', itemsResult )
         return itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results.map( r => r.Id );
       } );
+  
+      if(!lineIds) return res.sendStatus( 400 );
         
       let lineItemsDeals = lineIds && lineIds.length > 0 && await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
       {
         console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
         console.log( 'Associate Line Items=====>', itemsDealResult )
+        return itemsDealResult && itemsDealResult.results && itemsResult.results.length > 0 && itemsResult.results;
       } );
+  
+      if(!lineItemsDeals) return res.sendStatus( 400 );
           
-      let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
-      {
-        console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
-        console.log( 'Associate Quote=====>', quoteDealResult )
-      } );
-      res.sendStatus( 200 );
-    }
-    else
+      let updatedDeal = await UpdateDeal( accessToken,dealId, 5000 ).then( resultUpdate =>
       { 
-        res.sendStatus( 400 );
-      }
+        console.log( '=== Succesfully Update Deal from HubSpot using the access token ===' );
+        return resultUpdate && resultUpdate.Id || 0;
+      })
+    
+      // let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
+      // {
+      //   console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
+      //   console.log( 'Associate Quote=====>', quoteDealResult )
+      // } );
+      if(updatedDeal == 0 ) return res.sendStatus( 400 );
+      res.sendStatus( 200 );
     
 })
 
