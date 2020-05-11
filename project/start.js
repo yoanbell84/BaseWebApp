@@ -236,7 +236,7 @@ const createLineItems = async ( accessToken ) =>
       'Content-Type': 'application/json'
     },
     body: {
-        inputs: productList
+      inputs: [ ...productList.map( prod => ({ properties: prod}))]
     },
     
     //  body:   [
