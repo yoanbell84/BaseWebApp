@@ -272,7 +272,21 @@ const asociateLineItemsWithDeal = async ( accessToken, dealId,lineItemIds ) =>
   console.log( '' );
   console.log( '=== Asociate Line Items With Deal from HubSpot using the access token ===' );
   console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/associations/line_items/deal/batch/create\')' );
-  console.log( `=== Asociate Line Items ${JSON.stringify(lineItemIds)} With Deal from HubSpot using the access token ===` );
+  console.log( `=== Asociate Line Items ${ JSON.stringify( lineItemIds ) } With Deal from HubSpot using the access token ===` );
+  
+  const items = lineItemIds.map( element =>
+  {
+    return {
+      from: {
+        id: element
+      },
+      to: {
+        id: dealId
+      },
+      type: "line_item_to_deal"
+    }
+  } );
+  console.log(`=== Line Items ${ JSON.stringify( items ) }`)
   var options = {
     // url: `https://api.hubapi.com/crm-associations/v1/associations/create-batch`,
     url:'https://api.hubapi.com/crm/v3/associations/line_items/deal/batch/create',
@@ -290,18 +304,7 @@ const asociateLineItemsWithDeal = async ( accessToken, dealId,lineItemIds ) =>
     //     }
     //   }),
     body: {
-      inputs:lineItemIds.map( element =>
-        {
-        return {
-          from: {
-            id:element
-          },
-          to: {
-            id:dealId
-          },
-          type:"line_item_to_deal"          
-        }
-      }),
+      inputs:[...items],
     },
     json: true
   }
