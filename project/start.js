@@ -386,7 +386,7 @@ app.use(express.static(__dirname));
 app.set('views', __dirname + '/html');
 app.set('view engine', 'ejs');
 
-app.get( '/', ( req, res ) => 
+app.get( '/', async ( req, res ) => 
 {
   if ( !isAuthorized( req.sessionID ) )
   {
@@ -394,7 +394,8 @@ app.get( '/', ( req, res ) =>
   }
   else
   { 
-    res.render( 'pages/index' );
+    const accessToken = await getAccessToken(req.sessionID);
+    res.render( 'pages/index', {token: accessToken} );
   }
   res.end();
   
