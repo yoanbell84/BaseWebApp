@@ -444,9 +444,9 @@ app.post( '/create-quote', async (req,res) => {
   
   // if ( isAuthorized( req.sessionID ) )
   // {
+  console.log('Request======>',req)
     let dealId = req.body.dealId;
     let lineIds, quoteId = null;
-    let finalResult = true;
     const accessToken = await getAccessToken( req.sessionID );
 
     // quoteId = await createQuote( accessToken ).then( qResult =>
