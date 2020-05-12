@@ -443,7 +443,8 @@ const UpdateDeal = async ( accessToken,dealId) =>
 };
 app.post( '/create-quote', async (req,res) => {
  
-    let dealId = req.body.dealId;
+  let dealId = req.body.dealId;
+  
     let lineIds, quoteId = null;
     const accessToken = await getAccessToken( req.sessionID );
 
@@ -491,7 +492,7 @@ app.post( '/create-quote', async (req,res) => {
                 var handleClick = () =>
                 { 
                   window.parent.postMessage( JSON.stringify( { 'action': 'DONE' } ), '*' );
-                  window.parent.location.href=window.parent.location.href;
+                  // window.parent.location.href=window.parent.location.href;
                 }
                 </script>
                 <div class="alert alert-success" role="alert">Quote Succesfully Created</div>
