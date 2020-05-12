@@ -491,7 +491,14 @@ app.post( '/create-quote', async (req,res) => {
       window.parent.postMessage( JSON.stringify( { 'action': 'DONE' } ), '*' );
       window.parent.location.reload();
     }
-    var body = `<div>
+  var body = `<div>
+                <script>
+                var handleClick = () =>
+                { 
+                  window.parent.postMessage( JSON.stringify( { 'action': 'DONE' } ), '*' );
+                  window.parent.location.reload();
+                }
+                </script>
                 <div class="alert alert-success" role="alert">Quote Succesfully Created</div>
                 <button type="button" class="btn btn-primary" onclick="handleClick()">Close And Refresh</button>
                 </div>`;  
