@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
     <% include ../helpers/head %>
-    <script> 
+    <script > 
     var parentLocation = window.parent.location.href; 
     </script>
 </head>
@@ -29,7 +29,7 @@
       <div class="col col-md-6"></div>
       </div>
       <input type="hidden" id="dealId" name="dealId" value=<%= dealId %>>
-      <input type="hidden" id="location" name="location" value=<%= parentLocation %>>
+      <input type="hidden" id="location" name="location" value="window.parent.location.href">
       <button type="submit" class="btn btn-primary">Submit</button>
       <button type="button" class="btn btn-primary" onclick="window.parent.postMessage(JSON.stringify({'action': 'DONE'}), '*')">Close</button>
   </form>
