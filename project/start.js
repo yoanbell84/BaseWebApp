@@ -486,14 +486,14 @@ app.post( '/create-quote', async (req,res) => {
       // } );
     if ( updatedDeal == 0 ) return res.sendStatus( 400 );
   
-    let fn = (e) =>
+    let handleClick = () =>
     { 
       window.parent.postMessage( JSON.stringify( { 'action': 'DONE' } ), '*' );
       window.parent.location.reload();
     }
     var body = `<div>
                 <div class="alert alert-success" role="alert">Quote Succesfully Created</div>
-                <button type="button" class="btn btn-primary" onclick={ ${ (e) => fn(e)} }>Close And Refresh</button>
+                <button type="button" class="btn btn-primary" onclick="handleClick()">Close And Refresh</button>
                 </div>`;  
     res.status( 200 ).send(body);
     
