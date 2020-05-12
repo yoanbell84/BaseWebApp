@@ -36,7 +36,7 @@ var userId, userEmail, dealId = null;
 
 
 
-const defaultQuoteActions =  [
+const defaultQuoteActions = [
   {
     type: "IFRAME",
     width: 800,
@@ -53,15 +53,15 @@ const defaultQuoteActions =  [
     uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
     label: "Delete"
   }
-]
+];
 
-const defaultQuoteProperties =  [
+const defaultQuoteProperties = [
   {
     label: "Seller",
     dataType: "EMAIL",
     value: null
   }
-],
+];
 
 const quotes = [];
 
