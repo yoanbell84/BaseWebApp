@@ -440,6 +440,7 @@ app.get( '/new-quote', ( req, res ) =>
 {
 
   // console.log('Request Query----------', req.query)
+  res.setHeader( 'x-deal-id', req.query.dealId );
   res.render( 'pages/quote', {dealId: req.query.dealId});
  
 } );
@@ -514,9 +515,11 @@ const getDeal = async ( accessToken,dealId) =>
 };
 
 
-app.post( '/create-quote', async (req,res) => {
+app.post( '/create-quote', async ( req, res ) =>
+{
+  console.log('Request ========> ' , JSON.stringify(req.headers , null ,2))
  
-  let dealId = req.body.dealId;
+  let dealId = req.params.dealId;
   
     let lineIds, quoteId = null;
     const accessToken = await getAccessToken( req.sessionID );
@@ -559,7 +562,7 @@ app.post( '/create-quote', async (req,res) => {
         
       let lineItemsDeals = lineIds && lineIds.length > 0 && await asociateLineItemsWithDeal( accessToken, dealId, lineIds ).then( itemsDealResult =>
       {
-        console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
+        console.log( '=== Succesfully Associated Line Items To Deal from HubSpot using the access token ===' );
         console.log( 'Associate Line Items=====>', itemsDealResult )
         return itemsDealResult && itemsDealResult.results && itemsDealResult.results.length > 0 && itemsDealResult.results;
       } );
