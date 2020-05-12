@@ -532,13 +532,13 @@ app.post( '/create-quote', async (req,res) => {
     {
       console.log( '=== Retrieving Deal Info from HubSpot using the access token ===' );
       console.log( 'Deal =====>', dealResult && JSON.stringify( dealResult ) );
-      return dealResult && dealResult;
+      return dealResult || null;
     } );
   
     if(!deal) return res.sendStatus( 400 );
   
   let existingItems = deal && deal.associations && deal.associations.line_items && deal.associations.line_items.results && deal.associations.line_items.results.length > 0 && deal.associations.line_items.results.map( r => r.id ) || [];
- console.log('Existing',existingItems)
+ console.log('deal',deal)
   if ( existingItems.length > 0 )
   { 
     await deleteAsscociatedLineItemsWithDeal( accessToken,deal.id,existingItems ).then( itemsResult =>
