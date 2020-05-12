@@ -1,10 +1,6 @@
 <html lang="en">
 <head>
     <% include ../helpers/head %>
-    <script > 
-    var parentLocation = window.parent.location.href; 
-    console.log(parentLocation)
-    </script>
 </head>
 
 <body>
@@ -32,7 +28,7 @@
       <input type="hidden" id="dealId" name="dealId" value=<%= dealId %>>
       <input type="hidden" id="location" name="location">
       <button type="submit" class="btn btn-primary">Submit</button>
-      <button type="button" class="btn btn-primary" onclick="window.parent.postMessage(JSON.stringify({'action': 'DONE'}), 'https://app.hubspot.com/contacts/7623771/deal/<%= dealId %>')">Close</button>
+      <button type="button" class="btn btn-primary" onclick="window.parent.postMessage(JSON.stringify({'action': 'DONE'}), '*')">Close</button>
   </form>
 </body>
 
