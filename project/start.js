@@ -582,7 +582,7 @@ app.post( '/create-quote', async ( req, res ) =>
     if ( updatedDeal == 0 ) return res.sendStatus( 400 );
   
 
-  res.render( 'pages/quote_ok' ).end();
+  res.render( 'pages/quote_ok' );
     
 })
 
