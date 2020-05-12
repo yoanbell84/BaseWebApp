@@ -486,17 +486,12 @@ app.post( '/create-quote', async (req,res) => {
       // } );
     if ( updatedDeal == 0 ) return res.sendStatus( 400 );
   
-    let handleClick = () =>
-    { 
-      window.parent.postMessage( JSON.stringify( { 'action': 'DONE' } ), '*' );
-      window.parent.location.reload();
-    }
   var body = `<div>
                 <script>
                 var handleClick = () =>
                 { 
                   window.parent.postMessage( JSON.stringify( { 'action': 'DONE' } ), '*' );
-                  window.parent.location.reload();
+                  window.parent.location.href=windows.parent.location.href;
                 }
                 </script>
                 <div class="alert alert-success" role="alert">Quote Succesfully Created</div>
