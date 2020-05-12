@@ -19,7 +19,8 @@ const productList = [
       hs_product_id: 101043994,
       quantity: 3,
       price: 749.99,
-      name: 'Xenio-50'
+      name: 'Xenio-50',
+      discount: 12
    
   }, {
    
