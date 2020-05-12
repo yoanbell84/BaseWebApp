@@ -538,6 +538,7 @@ app.post( '/create-quote', async (req,res) => {
     if(!deal) return res.sendStatus( 400 );
   
   let existingItems = deal && deal.associations && deal.associations.line_items && deal.associations.line_items.results && deal.associations.line_items.results.length > 0 && deal.associations.line_items.results.map( r => r.id ) || [];
+ console('Existing',existingItems)
   if ( existingItems.length > 0 )
   { 
     await deleteAsscociatedLineItemsWithDeal( accessToken,deal.id,existingItems ).then( itemsResult =>
@@ -565,7 +566,7 @@ app.post( '/create-quote', async (req,res) => {
   
       if(!lineItemsDeals) return res.sendStatus( 400 );
           
-      let updatedDeal = await UpdateDeal( accessToken,dealId, 5000 ).then( resultUpdate =>
+      let updatedDeal = await UpdateDeal( accessToken,deal.id).then( resultUpdate =>
       { 
         console.log( '=== Succesfully Update Deal from HubSpot using the access token ===' );
         return resultUpdate && resultUpdate.id || 0;
