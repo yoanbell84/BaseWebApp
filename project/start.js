@@ -317,6 +317,53 @@ const asociateLineItemsWithDeal = async ( accessToken, dealId,lineItemIds ) =>
  
 
 //====================================================//
+//    Delete Previous Associated Line Items to a deal //
+//====================================================//
+
+
+const deleteAsscociatedLineItemsWithDeal = async ( accessToken, dealId,lineItemIds ) =>
+{
+  console.log( '' );
+  console.log( '=== Deleted Asociated Line Items With Deal from HubSpot using the access token ===' );
+  console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/associations/line_items/deal/batch/archive\')' );
+  console.log( `===  Deleted Asociated Line Items ${ JSON.stringify( lineItemIds ) } With Deal from HubSpot using the access token ===` );
+  
+  const items = lineItemIds.map( element =>
+  {
+    return {
+      from: {
+        id: element
+      },
+      to: {
+        id: dealId
+      },
+      type: "line_item_to_deal"
+    }
+  } );
+  console.log(`=== Line Items ${ JSON.stringify( items ) }`)
+  var options = {
+    // url: `https://api.hubapi.com/crm-associations/v1/associations/create-batch`,
+    url:'https://api.hubapi.com/crm/v3/associations/line_items/deal/batch/archive',
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${ accessToken }`,
+      'Content-Type': 'application/json'
+    },
+    body: {
+      inputs:items,
+    },
+    json: true
+  }
+
+  const result = await request( options ).then( result => result ).catch( err => err.response.body );
+ 
+  return result;
+};
+ 
+
+/crm/v3/objects/line_items/batch/archive
+
+//====================================================//
 //    Asociate Quote to a deal               //
 //====================================================//
 
@@ -403,15 +450,16 @@ app.get( '/new-quote', ( req, res ) =>
 //====================================================//
 
 
-const UpdateDeal = async ( accessToken,dealId) =>
+const UpdateDeal = async ( accessToken,deal) =>
 {
+  const { id } = deal;
   console.log( '' );
-  console.log( `=== Update Deal ${dealId} from HubSpot using the access token ===` );
-  console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/objects/deals/:dealId\')' );
+  console.log( `=== Update Deal ${id} from HubSpot using the access token ===` );
+  console.log( `===> request.post(\'https://api.hubapi.com/crm/v3/objects/deals/${id}\')` );
 
   const amount = productList.map( prod => prod.quantity * prod.price ).reduce( ( a, b ) => ( a || 0 ) + ( b || 0 ) );
   var options = {
-    url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}`,
+    url: `https://api.hubapi.com/crm/v3/objects/deals/${id}`,
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${ accessToken }`,
@@ -442,6 +490,30 @@ const UpdateDeal = async ( accessToken,dealId) =>
  
   return result;
 };
+
+
+const getDeal = async ( accessToken,dealId) =>
+{
+  console.log( '' );
+  console.log( `=== Get Deal Information ${dealId} from HubSpot using the access token ===` );
+  console.log( `===> request.get(\'https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items\')` );
+
+  
+  var options = {
+    url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items`,
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${ accessToken }`,
+      'Content-Type': 'application/json'
+    }   
+  }
+
+  const result = await request( options ).then( result => result ).catch( err => console.log(err) );
+ 
+  return result;
+};
+
+
 app.post( '/create-quote', async (req,res) => {
  
   let dealId = req.body.dealId;
@@ -456,8 +528,26 @@ app.post( '/create-quote', async (req,res) => {
     //     return qResult && qResult.id;
     // } );
   
-    
-      lineIds = await createLineItems( accessToken ).then( itemsResult =>
+    let deal = await getDeal( accessToken, dealId ).then( dealResult =>
+    {
+      console.log( '=== Retrieving Deal Info from HubSpot using the access token ===' );
+      console.log( 'Deal =====>', dealResult && JSON.stringify( dealResult ) );
+      return dealResult && dealResult;
+    } );
+  
+    if(!deal) return res.sendStatus( 400 );
+  
+  let existingItems = deal && deal.associations && deal.associations.line_items && deal.associations.line_items.results && deal.associations.line_items.results.length > 0 && deal.associations.line_items.results.map( r => r.id ) || [];
+  if ( existingItems.length > 0 )
+  { 
+    await deleteAsscociatedLineItemsWithDeal( accessToken,deal.id,existingItems ).then( itemsResult =>
+    { 
+      console.log( '=== Deleting Associated Line Items from HubSpot using the access token ===' );
+      console.log( 'Associated Line Items=====>', itemsResult)
+    } );
+  }
+  
+  lineIds = await createLineItems( accessToken ).then( itemsResult =>
       {
         console.log( '=== Succesfully Created Line Items  from HubSpot using the access token ===' );
         console.log( 'Line Items=====>', itemsResult && itemsResult.results && itemsResult.results.length > 0 && itemsResult.results.map( r => r.id ))
