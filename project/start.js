@@ -41,33 +41,6 @@ var userId, userEmail, dealId = null;
       <input type="hidden" id="userEmail" name="userEmail" value=<%= userEmail %>> -->
       
       */
-const defaultQuoteActions = [
-  {
-    type: "IFRAME",
-    width: 800,
-    height: 800,
-    uri: "https://tools.hubteam.com/integrations-iframe-test-app",
-    label: "Edit"
-  },
-  {
-    type: "CONFIRMATION_ACTION_HOOK",
-    confirmationMessage: "Are you sure you want to delete this quote",
-    confirmButtonText: "Yes",
-    cancelButtonText: "No",
-    httpMethod: "DELETE",
-    uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
-    label: "Delete"
-  }
-];
-
-const defaultQuoteProperties = [
-  {
-    label: "Seller",
-    dataType: "EMAIL",
-    value: null
-  }
-];
-
 const quotes = [];
 
 if (!config.clientId || !config.clientSecret) {
@@ -712,10 +685,10 @@ const isValid = (req) =>
 app.get( '/quote', function ( req, res )
 {
 
-  // if ( !isValid(req) )
-  //   res.sendStatus(403)
-  // else
-  // {
+  if ( !isValid(req) )
+    res.sendStatus(403)
+  else
+  {
     
     let userId = req.query.userId;
     let userEmail = req.query.userEmail;
@@ -726,7 +699,7 @@ app.get( '/quote', function ( req, res )
     let iframeHttpURI = `${base_url}/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
     
     let quoteResult = quotes.length > 0 && quotes || [];
-    console.log('Quote Result' , quoteResult)
+
     
     var options = {
       results: quoteResult,
@@ -778,7 +751,7 @@ app.get( '/quote', function ( req, res )
       }
     }
     return res.json( options );
-  // }
+  }
 } );
 
 
