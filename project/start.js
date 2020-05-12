@@ -290,7 +290,7 @@ const asociateLineItemsWithDeal = async ( accessToken, dealId,lineItemIds ) =>
   var options = {
     // url: `https://api.hubapi.com/crm-associations/v1/associations/create-batch`,
     url:'https://api.hubapi.com/crm/v3/associations/line_items/deal/batch/create',
-    method: 'PUT',
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${ accessToken }`,
       'Content-Type': 'application/json'
@@ -304,7 +304,7 @@ const asociateLineItemsWithDeal = async ( accessToken, dealId,lineItemIds ) =>
     //     }
     //   }),
     body: {
-      inputs:[...items],
+      inputs:items,
     },
     json: true
   }
@@ -441,11 +441,6 @@ const UpdateDeal = async ( accessToken,dealId, finalAmout = 0) =>
 };
 app.post( '/create-quote', async (req,res) => {
  
-  
-  // if ( isAuthorized( req.sessionID ) )
-  // {
-  console.log( 'Request======>', req.body )
-  // console.log('Response======>',res)
     let dealId = req.body.dealId;
     let lineIds, quoteId = null;
     const accessToken = await getAccessToken( req.sessionID );
