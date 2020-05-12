@@ -408,6 +408,7 @@ const UpdateDeal = async ( accessToken,dealId, finalAmout = 0) =>
   console.log( `=== Update Deal ${dealId} from HubSpot using the access token ===` );
   console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/objects/deals/:dealId\')' );
 
+  const amount = productList.map( prod => prod.quantity * prod.amount ).reduce( ( a, b ) => ( a || 0 ) + ( b || 0 ) );
   var options = {
     url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}`,
     method: 'PATCH',
@@ -424,7 +425,9 @@ const UpdateDeal = async ( accessToken,dealId, finalAmout = 0) =>
       //   { name:'max_users', value: 20},
       //   { name:'dealstage', value: 'qualifiedtobuy'}
       // ]
-      amount: productList.map( prod => prod.quantity * prod.amount).reduce((a,b) => (a || 0) + (b || 0)),
+      amount: amount,
+      hs_acv: amount,
+      hs_tcv: amount,
       assigned_channel: 1,
       tax: 150,
       shipping: 130,
@@ -466,7 +469,7 @@ app.post( '/create-quote', async (req,res) => {
       {
         console.log( '=== Succesfully Asociated Line Items To Deal from HubSpot using the access token ===' );
         console.log( 'Associate Line Items=====>', itemsDealResult )
-        return itemsDealResult && itemsDealResult.results && itemsResult.results.length > 0 && itemsResult.results;
+        return itemsDealResult && itemsDealResult.results && itemsDealResult.results.length > 0 && itemsDealResult.results;
       } );
   
       if(!lineItemsDeals) return res.sendStatus( 400 );
