@@ -427,8 +427,6 @@ const UpdateDeal = async ( accessToken,dealId) =>
       // ]
       properties: {
         amount: amount,
-        hs_acv: amount,
-        hs_tcv: amount,
         assigned_channel: 1,
         tax: 150,
         shipping: 130,
