@@ -408,7 +408,7 @@ const UpdateDeal = async ( accessToken,dealId) =>
   console.log( `=== Update Deal ${dealId} from HubSpot using the access token ===` );
   console.log( '===> request.post(\'https://api.hubapi.com/crm/v3/objects/deals/:dealId\')' );
 
-  const amount = productList.map( prod => prod.quantity * prod.amount ).reduce( ( a, b ) => ( a || 0 ) + ( b || 0 ) );
+  const amount = productList.map( prod => prod.quantity * prod.price ).reduce( ( a, b ) => ( a || 0 ) + ( b || 0 ) );
   var options = {
     url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}`,
     method: 'PATCH',
