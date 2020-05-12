@@ -402,7 +402,7 @@ app.get( '/new-quote', ( req, res ) =>
 //====================================================//
 
 
-const UpdateDeal = async ( accessToken,dealId, finalAmout = 0) =>
+const UpdateDeal = async ( accessToken,dealId) =>
 {
   console.log( '' );
   console.log( `=== Update Deal ${dealId} from HubSpot using the access token ===` );
@@ -425,15 +425,16 @@ const UpdateDeal = async ( accessToken,dealId, finalAmout = 0) =>
       //   { name:'max_users', value: 20},
       //   { name:'dealstage', value: 'qualifiedtobuy'}
       // ]
-      amount: amount,
-      hs_acv: amount,
-      hs_tcv: amount,
-      assigned_channel: 1,
-      tax: 150,
-      shipping: 130,
-      max_users: 50,
-      dealstage: 'qualifiedtobuy'
-
+      properties: {
+        amount: amount,
+        hs_acv: amount,
+        hs_tcv: amount,
+        assigned_channel: 1,
+        tax: 150,
+        shipping: 130,
+        max_users: 50,
+        dealstage: 'qualifiedtobuy'
+      }
     },
     json: true
   }
@@ -477,7 +478,7 @@ app.post( '/create-quote', async (req,res) => {
       let updatedDeal = await UpdateDeal( accessToken,dealId, 5000 ).then( resultUpdate =>
       { 
         console.log( '=== Succesfully Update Deal from HubSpot using the access token ===' );
-        return resultUpdate && resultUpdate.Id || 0;
+        return resultUpdate && resultUpdate.id || 0;
       })
     
       // let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
