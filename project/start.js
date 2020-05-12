@@ -32,6 +32,39 @@ const productList = [
   }
 ]
 
+var userId, userEmail, dealId = null;
+
+
+
+const defaultQuoteActions =  [
+  {
+    type: "IFRAME",
+    width: 800,
+    height: 800,
+    uri: "https://tools.hubteam.com/integrations-iframe-test-app",
+    label: "Edit"
+  },
+  {
+    type: "CONFIRMATION_ACTION_HOOK",
+    confirmationMessage: "Are you sure you want to delete this quote",
+    confirmButtonText: "Yes",
+    cancelButtonText: "No",
+    httpMethod: "DELETE",
+    uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
+    label: "Delete"
+  }
+]
+
+const defaultQuoteProperties =  [
+  {
+    label: "Seller",
+    dataType: "EMAIL",
+    value: null
+  }
+],
+
+const quotes = [];
+
 if (!config.clientId || !config.clientSecret) {
     throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
 }
@@ -438,11 +471,10 @@ app.get( '/', async ( req, res ) =>
 
 app.get( '/new-quote', ( req, res ) => 
 {
-
-  // console.log('Request Query----------', req.query)
-  res.set({'x-deal-id': req.query.dealId});
-  res.render( 'pages/quote', {dealId: req.query.dealId});
- 
+  userId = req.query.userId;
+  dealId = req.query.dealId;
+  userEmail = req.query.userEmail;
+  res.render( 'pages/quote');
 } );
 
 
@@ -518,7 +550,9 @@ const getDeal = async ( accessToken,dealId) =>
 app.post( '/create-quote', async ( req, res ) =>
 {
  
-  let dealId = req.body.dealId;
+  // let dealId = req.body.dealId;
+  let quote_name = req.body.quote_name;
+  let seller = 'ybell@'
   
     let lineIds, quoteId = null;
     const accessToken = await getAccessToken( req.sessionID );
@@ -529,6 +563,7 @@ app.post( '/create-quote', async ( req, res ) =>
     //   console.log( 'Quote =====>', JSON.stringify(qResult, null , 2) )
     //     return qResult && qResult.id;
     // } );
+  if(!dealId) return res.sendStatus( 400 );
   
     let deal = await getDeal( accessToken, dealId ).then( dealResult =>
     {
@@ -582,9 +617,45 @@ app.post( '/create-quote', async ( req, res ) =>
     if ( updatedDeal == 0 ) return res.sendStatus( 400 );
   
 
+  quotes.push( createQuoteObj(req.body.quote_name,req.body.quote_name,userEmail) );
   res.render( 'pages/quote_ok' );
     
-})
+} )
+
+const createQuoteObj = (name,title, userEmail) =>
+{ 
+  let id = Math.floor( Math.random() * 100001 );
+  return  {
+    objectId: id,
+    quote_name: name,
+    title: title,
+    link: `https://enigmatic-tor-68993.herokuapp.com/quote/view/${ id }`,
+    properties: [
+      {
+      label: "Seller",
+      dataType: "EMAIL",
+      value: userEmail
+      }
+    ],
+    actions:[{
+      type: "IFRAME",
+      width: 800,
+      height: 800,
+      uri:  `https://enigmatic-tor-68993.herokuapp.com/quote/edit/${ id }`,
+      label: "Edit"
+    },
+    {
+      type: "CONFIRMATION_ACTION_HOOK",
+      confirmationMessage: "Are you sure you want to delete this quote",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      httpMethod: "DELETE",
+      uri:  `https://enigmatic-tor-68993.herokuapp.com/quote/delete/${ id }`,
+      label: "Delete"
+      }
+    ]
+  }
+}
 
 
 app.post( '/webhock', ( req, res ) =>
@@ -646,49 +717,51 @@ app.get( '/quote', function ( req, res )
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
 
-    let iframeHttpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?dealId=${associatedObjectId}`;
+    let iframeHttpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
     
+    let quoteResult = quotes.length > 0 && quotes;
     
     var options = {
-      results: [
-        {
-          quote_name: "Sample Yoan-quote",
-          objectId: 232,
-          title: 'Test-Yoan',
-          link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
-          properties: [
-            {
-              label: "Seller",
-              dataType: "EMAIL",
-              value: "ybell@easyworkforce.com"
-            },
-            {
-              label: "Amount",
-              dataType: "CURRENCY",
-              value: "150",
-              currencyCode: "USD"
-            }
-          ],
-          actions: [
-            {
-              type: "IFRAME",
-              width: 800,
-              height: 800,
-              uri: "https://tools.hubteam.com/integrations-iframe-test-app",
-              label: "Edit"
-            },
-            {
-              type: "CONFIRMATION_ACTION_HOOK",
-              confirmationMessage: "Are you sure you want to delete this quote",
-              confirmButtonText: "Yes",
-              cancelButtonText: "No",
-              httpMethod: "DELETE",
-              uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
-              label: "Delete"
-            }
-          ]
-        }
-      ],
+      results: quoteResult,
+      // results: [
+      //   {
+      //     quote_name: 'Quote Test',
+      //     objectId: 232,
+      //     title: 'Test-Yoan',
+      //     link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
+      //     properties: [
+      //       {
+      //         label: "Seller",
+      //         dataType: "EMAIL",
+      //         value: "ybell@easyworkforce.com"
+      //       },
+      //       {
+      //         label: "Amount",
+      //         dataType: "CURRENCY",
+      //         value: "150",
+      //         currencyCode: "USD"
+      //       }
+      //     ],
+      //     actions: [
+      //       {
+      //         type: "IFRAME",
+      //         width: 800,
+      //         height: 800,
+      //         uri: "https://tools.hubteam.com/integrations-iframe-test-app",
+      //         label: "Edit"
+      //       },
+      //       {
+      //         type: "CONFIRMATION_ACTION_HOOK",
+      //         confirmationMessage: "Are you sure you want to delete this quote",
+      //         confirmButtonText: "Yes",
+      //         cancelButtonText: "No",
+      //         httpMethod: "DELETE",
+      //         uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
+      //         label: "Delete"
+      //       }
+      //     ]
+      //   }
+      // ],
       primaryAction: {
         type: "IFRAME",
         width: 800,
