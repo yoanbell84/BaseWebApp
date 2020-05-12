@@ -720,7 +720,7 @@ app.get( '/quote', function ( req, res )
 
     let iframeHttpURI = `${base_url}/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
     
-    let quoteResult = quotes.length > 0 && quotes;
+    let quoteResult = quotes.length > 0 && quotes || [];
     console.log('Quote Result' , quoteResult)
     
     var options = {
