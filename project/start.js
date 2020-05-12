@@ -92,6 +92,7 @@ if (config.scope) {
 }
 
 // On successful install, users will be redirected to /oauth-callback
+const base_url = config.nodeMode == 'DEBUG' ? `http://localhost:${ PORT }` : 'https://enigmatic-tor-68993.herokuapp.com';
 const REDIRECT_URI = config.nodeMode == 'DEBUG' ? `http://localhost:${ PORT }/oauth-callback` : 'https://enigmatic-tor-68993.herokuapp.com/oauth-callback';
 
 
@@ -629,7 +630,7 @@ const createQuoteObj = (name,title, userEmail) =>
     objectId: id,
     quote_name: name,
     title: title,
-    link: `https://enigmatic-tor-68993.herokuapp.com/quote/view/${ id }`,
+    link: `${base_url}/quote/view/${ id }`,
     properties: [
       {
       label: "Seller",
@@ -641,7 +642,7 @@ const createQuoteObj = (name,title, userEmail) =>
       type: "IFRAME",
       width: 800,
       height: 800,
-      uri:  `https://enigmatic-tor-68993.herokuapp.com/quote/edit/${ id }`,
+      uri:  `${base_url}/quote/edit/${ id }`,
       label: "Edit"
     },
     {
@@ -650,7 +651,7 @@ const createQuoteObj = (name,title, userEmail) =>
       confirmButtonText: "Yes",
       cancelButtonText: "No",
       httpMethod: "DELETE",
-      uri:  `https://enigmatic-tor-68993.herokuapp.com/quote/delete/${ id }`,
+      uri:  `${base_url}/quote/delete/${ id }`,
       label: "Delete"
       }
     ]
@@ -717,7 +718,7 @@ app.get( '/quote', function ( req, res )
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
 
-    let iframeHttpURI = `https://enigmatic-tor-68993.herokuapp.com/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
+    let iframeHttpURI = `${base_url}/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
     
     let quoteResult = quotes.length > 0 && quotes;
     
