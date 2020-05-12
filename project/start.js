@@ -440,7 +440,7 @@ app.get( '/new-quote', ( req, res ) =>
 {
 
   // console.log('Request Query----------', req.query)
-  res.setHeader( 'x-deal-id', req.query.dealId );
+  res.set({'x-deal-id': req.query.dealId});
   res.render( 'pages/quote', {dealId: req.query.dealId});
  
 } );
@@ -673,8 +673,8 @@ app.get( '/quote', function ( req, res )
           actions: [
             {
               type: "IFRAME",
-              width: 1500,
-              height: 1500,
+              width: 800,
+              height: 800,
               uri: "https://tools.hubteam.com/integrations-iframe-test-app",
               label: "Edit"
             },
@@ -692,8 +692,8 @@ app.get( '/quote', function ( req, res )
       ],
       primaryAction: {
         type: "IFRAME",
-        width: 1500,
-        height: 1500,
+        width: 800,
+        height: 800,
         uri: iframeHttpURI,
         label: "Create CRM Quote"
       }
