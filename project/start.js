@@ -604,6 +604,8 @@ app.post( '/create-quote', async ( req, res ) =>
 const createQuoteObj = (name,title, userEmail) =>
 { 
   let id = Math.floor( Math.random() * 100001 );
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
   return  {
     objectId: id,
     quote_name: name,
@@ -611,9 +613,21 @@ const createQuoteObj = (name,title, userEmail) =>
     link: `${base_url}/quote/view/${ id }`,
     properties: [
       {
-      label: "Seller",
-      dataType: "EMAIL",
-      value: userEmail
+        label: "Created",
+        dataType: "DATE",
+        value: date
+      },
+      {
+        label: "Seller",
+        dataType: "EMAIL",
+        value: userEmail
+      },
+      {
+        name: "status",
+        label: "Status",
+        dataType: "STATUS",
+        type: "SUCCESS",
+        value:"Ready to Send"
       }
     ],
     actions:[{
