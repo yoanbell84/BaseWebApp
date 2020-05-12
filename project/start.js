@@ -496,11 +496,11 @@ const getDeal = async ( accessToken,dealId) =>
 {
   console.log( '' );
   console.log( `=== Get Deal Information ${dealId} from HubSpot using the access token ===` );
-  console.log( `===> request.get(\'https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items\')` );
+  console.log( `===> request.get(\'https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items,company,contact\')` );
 
   
   var options = {
-    url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items`,
+    url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items,company,contact`,
     method: 'GET',
     headers: {
       Authorization: `Bearer ${ accessToken }`,
@@ -566,7 +566,7 @@ app.post( '/create-quote', async (req,res) => {
   
       if(!lineItemsDeals) return res.sendStatus( 400 );
           
-      let updatedDeal = await UpdateDeal( accessToken,deal.id).then( resultUpdate =>
+      let updatedDeal = await UpdateDeal( accessToken,deal).then( resultUpdate =>
       { 
         console.log( '=== Succesfully Update Deal from HubSpot using the access token ===' );
         return resultUpdate && resultUpdate.id || 0;
