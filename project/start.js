@@ -35,7 +35,12 @@ const productList = [
 var userId, userEmail, dealId = null;
 
 
-
+/*
+      <!-- <input type="hidden" id="dealId" name="dealId" value=<%= dealId %>>
+      <input type="hidden" id="userId" name="userId" value=<%= userId %>>
+      <input type="hidden" id="userEmail" name="userEmail" value=<%= userEmail %>> -->
+      
+      */
 const defaultQuoteActions = [
   {
     type: "IFRAME",
