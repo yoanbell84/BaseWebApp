@@ -83,7 +83,7 @@ const authUrl =
   'https://app.hubspot.com/oauth/authorize' +
   `?client_id=${encodeURIComponent(CLIENT_ID)}` + // app's client ID
   `&scope=${encodeURIComponent(SCOPES)}` + // scopes being requested by the app
-  `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`; // where to send the user after the consent page
+  `&redirect_uri=${REDIRECT_URI}`; // where to send the user after the consent page
 
 // Redirect the user from the installation page to
 // the authorization URL
@@ -517,9 +517,8 @@ const getDeal = async ( accessToken,dealId) =>
 
 app.post( '/create-quote', async ( req, res ) =>
 {
-  console.log('Request ========> ' , JSON.stringify(req.headers , null ,2))
  
-  let dealId = req.params.dealId;
+  let dealId = req.body.dealId;
   
     let lineIds, quoteId = null;
     const accessToken = await getAccessToken( req.sessionID );
