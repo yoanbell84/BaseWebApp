@@ -538,7 +538,7 @@ app.post( '/create-quote', async (req,res) => {
     if(!deal) return res.sendStatus( 400 );
   
   let existingItems = deal && deal.associations && deal.associations.line_items && deal.associations.line_items.results && deal.associations.line_items.results.length > 0 && deal.associations.line_items.results.map( r => r.id ) || [];
- console('Existing',existingItems)
+ console.log('Existing',existingItems)
   if ( existingItems.length > 0 )
   { 
     await deleteAsscociatedLineItemsWithDeal( accessToken,deal.id,existingItems ).then( itemsResult =>
