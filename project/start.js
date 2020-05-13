@@ -750,10 +750,10 @@ const isValid = (req) =>
 app.get( '/quote', function ( req, res )
 {
 
-  if ( !isValid(req) )
-    res.sendStatus(403)
-  else
-  {
+  // if ( !isValid(req) )
+  //   res.sendStatus(403)
+  // else
+  // {
     
     let userId = req.query.userId;
     let userEmail = req.query.userEmail;
@@ -829,7 +829,7 @@ app.get( '/quote', function ( req, res )
       primaryAction: defaultPrimaryOptions
     }
     return res.json( options );
-  }
+  // }
 } );
 
 
