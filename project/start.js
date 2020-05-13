@@ -605,7 +605,8 @@ const createQuoteObj = (name,title, userEmail) =>
 { 
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date();
-  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var date = today.getFullYear() + '-' + ( today.getMonth() + 1 ) + '-' + today.getDate();
+  
   return  {
     objectId: id,
     quote_name: name,
@@ -614,19 +615,21 @@ const createQuoteObj = (name,title, userEmail) =>
     properties: [
       {
         label: "Created",
+        name:"created_at",
         dataType: "DATE",
         value: date
       },
       {
         label: "Seller",
+        name:"seller",
         dataType: "EMAIL",
         value: userEmail
       },
       {
-        name: "status",
         label: "Status",
+        name:"status",
         dataType: "STATUS",
-        type: "SUCCESS",
+        optionType: "SUCCESS",
         value:"Ready to Send"
       }
     ],
