@@ -453,6 +453,7 @@ app.get( '/new-quote', ( req, res ) =>
   userId = req.query.userId;
   dealId = req.query.dealId;
   userEmail = req.query.userEmail;
+  console.log('RefreshTokenStore' , refreshTokenStore)
   res.render( 'pages/quote');
 } );
 
@@ -533,8 +534,11 @@ app.post( '/create-quote', async ( req, res ) =>
   let quote_name = req.body.quote_name;
   let seller = 'ybell@'
   
-    let lineIds, quoteId = null;
-    const accessToken = await getAccessToken( req.sessionID );
+  let lineIds, quoteId = null;
+  
+  console.log( 'RefreshTokenStore Create Quote', refreshTokenStore )
+  console.log( 'req.sessionID', req.sessionID )
+  const accessToken = await getAccessToken( req.sessionID );
 
     // quoteId = await createQuote( accessToken ).then( qResult =>
     // { 
