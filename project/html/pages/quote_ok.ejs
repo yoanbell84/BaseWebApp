@@ -8,6 +8,7 @@
     var handleClick = () =>
     { 
       window.parent.postMessage( JSON.stringify( { 'action': 'DONE' } ), '*' );
+      window.top.location.href = "http://example.com";
     }
     </script>
   <div class="alert alert-success" role="alert">Quote Succesfully Created</div>
