@@ -605,10 +605,12 @@ const createQuoteObj = (name,title, userEmail) =>
 { 
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date( Date.now() );
+  var expiring = new Date( Date.now() );
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   var date = today.toLocaleDateString( 'en-US', options );
-  today.setMonth((today.getMonth() + 1) + 2);
-  var expiring = today.toLocaleDateString( 'en-US', options );
+  expiring.setMonth((expiring.getMonth() + 1) + 2);
+  var expiringDate = expiring.toLocaleDateString( 'en-US', options );
+  console.log(expiringDate)
   return  {
     objectId: id,
     quote_name: name,
@@ -621,22 +623,23 @@ const createQuoteObj = (name,title, userEmail) =>
         value: date
       },
       {
-        label: "Expiring",
-        dataType: "DATE",
-        value: expiring
-      },
-      {
-        label: "Seller",
-        dataType: "EMAIL",
-        value: userEmail
-      },
-      {
         label: "Status",
         name:"status",
         dataType: "STATUS",
         optionType: "SUCCESS",
         value:"Ready to Send"
+      },
+      {
+        label: "Expiring",
+        dataType: "DATE",
+        value: expiringDate
+      },
+      {
+        label: "Seller",
+        dataType: "EMAIL",
+        value: userEmail
       }
+    
     ],
     actions:[{
       type: "IFRAME",
