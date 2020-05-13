@@ -606,7 +606,7 @@ const createQuoteObj = (name,title, userEmail) =>
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date( Date.now() );
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  var expiring = today.setMonth((event.getMonth() + 1) + 2).toLocaleDateString( 'en-US', options );
+  var expiring = today.setMonth((today.getMonth() + 1) + 2).toLocaleDateString( 'en-US', options );
   var date = today.toLocaleDateString( 'en-US', options );
   
   return  {
