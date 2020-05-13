@@ -523,11 +523,11 @@ const getDeal = async ( accessToken,dealId) =>
 {
   console.log( '' );
   console.log( `=== Get Deal Information ${dealId} from HubSpot using the access token ===` );
-  console.log( `===> request.get(\'https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items,company,contact\')` );
+  console.log( `===> request.get(\'https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount&associations=line_items,company,contact\')` );
 
   
   var options = {
-    url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount,hs_acv,hs_tcv&associations=line_items,company,contact`,
+    url: `https://api.hubapi.com/crm/v3/objects/deals/${dealId}?properties=max_users,tax,shipping,dealstage,dealname,closedate,amount&associations=line_items,company,contact`,
     method: 'GET',
     headers: {
       Authorization: `Bearer ${ accessToken }`,
@@ -613,26 +613,46 @@ app.post( '/create-quote', async ( req, res ) =>
       // } );
     if ( updatedDeal == 0 ) return res.sendStatus( 400 );
   
-
-  quotes.push( createQuoteObj(req.body.quote_name,req.body.quote_name,userEmail) );
+  quotes.push( createQuoteObj(req.body.quote_name,req.body.quote_name,userEmail,contactEmail = 'yoanbell84@gmail.com') );
   res.render( 'pages/quote_ok' );
     
 } )
 
-const createQuoteObj = (name,title, userEmail) =>
+app.delete( '/quote/:quoteId', async( req,res) =>
+{
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
+    let objectId = req.query.quoteId;
+    quotes = quotes.filter( q => q.objectId != objectId );
+    res.status( 200 ).send( { "message": "Successfully deleted object" } );  
+  }
+  
+} );
+
+app.get( '/quote/:quoteId', async( req,res) =>
+{
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
+    res.write( `<div>Editing Quote ${ req.query.quoteId }</div>` );
+  }
+  
+} );
+
+const createQuoteObj = (name,title, userEmail ,contactEmail) =>
 { 
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date( Date.now() );
-  var expiring = new Date( Date.now() );
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
   var date = today.toISOString().split( 'T' )[ 0 ];
-  expiring.setMonth((expiring.getMonth() + 1) + 2);
-  var expiringDate = expiring.toISOString().split( 'T' )[ 0 ];
+  today.setMonth((today.getMonth() + 1) + 2);
+  var expiringDate = today.toISOString().split( 'T' )[ 0 ];
   
   const result = {
     objectId: id,
-    quote_name: name,
-    title: title,
+    title: `Quote ${name}`,
     link: `${ base_url }/quote/view/${ id }`,
     properties: [
       {
@@ -648,22 +668,21 @@ const createQuoteObj = (name,title, userEmail) =>
         value: "Ready to Send"
       },
       {
+        label: "Send to",
+        dataType: "EMAIL",
+        value: contactEmail
+      },
+      {
         label: "Expiring",
         dataType: "DATE",
         value: expiringDate
-      },
-      {
-        label: "Seller",
-        dataType: "EMAIL",
-        value: userEmail
       }
-  
     ],
     actions: [ {
       type: "IFRAME",
       width: 800,
       height: 800,
-      uri: `${ base_url }/quote/edit/${ id }`,
+      uri: `${ base_url }/quote/${ id }`,
       label: "Edit"
     },
     {
@@ -672,7 +691,7 @@ const createQuoteObj = (name,title, userEmail) =>
       confirmButtonText: "Yes",
       cancelButtonText: "No",
       httpMethod: "DELETE",
-      uri: `${ base_url }/quote/delete/${ id }`,
+      uri: `${ base_url }/quote/${ id }`,
       label: "Delete"
     }
     ]
@@ -744,8 +763,27 @@ app.get( '/quote', function ( req, res )
 
     let iframeHttpURI = `${base_url}/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
     
-    let quoteResult = quotes.length > 0 && quotes || [];
-
+    let defaultQuoteProperties = [
+      {
+        title: 'Quote',
+        objectId: 0,
+        properties: {
+          label: "Status",
+          name: "status",
+          dataType: "STATUS",
+          optionType: "WARNING ",
+          value: "Not created"
+        }
+    }]
+    let quoteResult = quotes.length > 0 && quotes || defaultQuoteProperties;
+    
+    let defaultPrimaryOptions = quotes.length == 0 && {
+      type: "IFRAME",
+      width: 800,
+      height: 800,
+      uri: iframeHttpURI,
+      label: "Create CRM Quote"
+    } || null;
     
     var options = {
       results: quoteResult,
@@ -788,13 +826,7 @@ app.get( '/quote', function ( req, res )
       //     ]
       //   }
       // ],
-      primaryAction: {
-        type: "IFRAME",
-        width: 800,
-        height: 800,
-        uri: iframeHttpURI,
-        label: "Create CRM Quote"
-      }
+      primaryAction: defaultPrimaryOptions
     }
     return res.json( options );
   }
