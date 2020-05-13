@@ -763,20 +763,19 @@ app.get( '/quote', function ( req, res )
 
     let iframeHttpURI = `${base_url}/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
     
-    let defaultQuoteProperties = [
+    let defaultQuote = [
       {
         title: 'Quote',
-        link:'',
+        link:null,
         objectId: 1,
         properties: {
           label: "Status",
-          name: "status",
           dataType: "STATUS",
           optionType: "WARNING ",
           value: "Not created"
         }
     }]
-    let quoteResult = quotes.length > 0 && quotes || defaultQuoteProperties;
+    let quoteResult = quotes.length > 0 && quotes || defaultQuote;
     
     let defaultPrimaryOptions = quotes.length == 0 && {
       type: "IFRAME",
@@ -788,6 +787,7 @@ app.get( '/quote', function ( req, res )
     
     var options = {
       results: quoteResult,
+      primaryAction: defaultPrimaryOptions
       // results: [
       //   {
       //     quote_name: 'Quote Test',
@@ -827,7 +827,7 @@ app.get( '/quote', function ( req, res )
       //     ]
       //   }
       // ],
-      primaryAction: defaultPrimaryOptions
+     
     }
     return res.json( options );
   // }
