@@ -607,9 +607,10 @@ const createQuoteObj = (name,title, userEmail) =>
   var today = new Date( Date.now() );
   var expiring = new Date( Date.now() );
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  var date = today.toLocaleDateString( 'en-US', options );
+  var date = today.toISOString().split( 'T' )[ 0 ];
   expiring.setMonth((expiring.getMonth() + 1) + 2);
-  var expiringDate = expiring.toLocaleDateString( 'en-US', options );
+  var expiringDate = expiring.toISOString().split( 'T' )[ 0 ];
+  
   const result = {
     objectId: id,
     quote_name: name,
