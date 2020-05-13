@@ -468,7 +468,6 @@ app.get( '/new-quote', ( req, res ) =>
   userId = req.query.userId;
   dealId = req.query.dealId;
   userEmail = req.query.userEmail;
-  console.log('RefreshTokenStore' , refreshTokenStore)
   res.render( 'pages/quote');
 } );
 
