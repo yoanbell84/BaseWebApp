@@ -768,12 +768,12 @@ app.get( '/quote', function ( req, res )
         title: 'Quote',
         link:null,
         objectId: 1,
-        properties: {
-          label: "Status",
-          dataType: "STATUS",
-          optionType: "WARNING ",
-          value: "Not created"
-        }
+        // properties: {
+        //   label: "Status",
+        //   dataType: "STATUS",
+        //   optionType: "WARNING ",
+        //   value: "Not created"
+        // }
     }]
     let quoteResult = quotes.length > 0 && quotes || defaultQuote;
     
