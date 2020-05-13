@@ -615,13 +615,11 @@ const createQuoteObj = (name,title, userEmail) =>
     properties: [
       {
         label: "Created",
-        name:"created_at",
         dataType: "DATE",
         value: date
       },
       {
         label: "Seller",
-        name:"seller",
         dataType: "EMAIL",
         value: userEmail
       },
