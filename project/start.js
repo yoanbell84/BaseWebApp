@@ -766,7 +766,7 @@ app.get( '/quote', function ( req, res )
     let defaultQuoteProperties = [
       {
         title: 'Quote',
-        // link:'',
+        link:'',
         // objectId: 0,
         properties: {
           label: "Status",
