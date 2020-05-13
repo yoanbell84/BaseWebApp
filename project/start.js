@@ -604,8 +604,9 @@ app.post( '/create-quote', async ( req, res ) =>
 const createQuoteObj = (name,title, userEmail) =>
 { 
   let id = Math.floor( Math.random() * 100001 );
-  var today = new Date();
-  var date = today.getFullYear() + '-' + ( today.getMonth() + 1 ) + '-' + today.getDate();
+  var today = new Date( Date.now() );
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  var date = today.toLocaleDateString( 'en-US', options );
   
   return  {
     objectId: id,
