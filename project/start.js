@@ -610,12 +610,11 @@ const createQuoteObj = (name,title, userEmail) =>
   var date = today.toLocaleDateString( 'en-US', options );
   expiring.setMonth((expiring.getMonth() + 1) + 2);
   var expiringDate = expiring.toLocaleDateString( 'en-US', options );
-  console.log(expiringDate)
-  return  {
+  const result = {
     objectId: id,
     quote_name: name,
     title: title,
-    link: `${base_url}/quote/view/${ id }`,
+    link: `${ base_url }/quote/view/${ id }`,
     properties: [
       {
         label: "Created",
@@ -624,10 +623,10 @@ const createQuoteObj = (name,title, userEmail) =>
       },
       {
         label: "Status",
-        name:"status",
+        name: "status",
         dataType: "STATUS",
         optionType: "SUCCESS",
-        value:"Ready to Send"
+        value: "Ready to Send"
       },
       {
         label: "Expiring",
@@ -639,13 +638,13 @@ const createQuoteObj = (name,title, userEmail) =>
         dataType: "EMAIL",
         value: userEmail
       }
-    
+  
     ],
-    actions:[{
+    actions: [ {
       type: "IFRAME",
       width: 800,
       height: 800,
-      uri:  `${base_url}/quote/edit/${ id }`,
+      uri: `${ base_url }/quote/edit/${ id }`,
       label: "Edit"
     },
     {
@@ -654,11 +653,14 @@ const createQuoteObj = (name,title, userEmail) =>
       confirmButtonText: "Yes",
       cancelButtonText: "No",
       httpMethod: "DELETE",
-      uri:  `${base_url}/quote/delete/${ id }`,
+      uri: `${ base_url }/quote/delete/${ id }`,
       label: "Delete"
-      }
+    }
     ]
-  }
+  };
+  console.log( 'Result=============>', result );
+  console.log( 'Result=============>', JSON.stringify( result ) );
+  return result 
 }
 
 
