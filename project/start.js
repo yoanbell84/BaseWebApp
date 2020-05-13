@@ -771,7 +771,7 @@ app.get( '/quote', function ( req, res )
         properties: [{
           label: "Status",
           dataType: "STATUS",
-          optionType: "WARNING ",
+          optionType: "WARNING",
           value: "Not created"
         }]
     }]
