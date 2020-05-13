@@ -11,7 +11,7 @@ const crypto = require( 'crypto' );
 const config = require('../config');
 const PORT = (process.env.PORT || 5000);
 
-const refreshTokenStore = {};
+let refreshTokenStore = {};
 const accessTokenCache = new NodeCache( { deleteOnExpire: true } );
 
 const productList = [
@@ -157,9 +157,13 @@ const exchangeForTokens = async (userId, exchangeProof) => {
     });
     // Usually, this token data should be persisted in a database and associated with
     // a user identity.
-    const tokens = JSON.parse(responseBody);
-    refreshTokenStore[userId] = tokens.refresh_token;
-    accessTokenCache.set(userId, tokens.access_token, Math.round(tokens.expires_in * 0.75));
+    const tokens = JSON.parse( responseBody );
+    refreshTokenStore = tokens;
+    refreshTokenStore.updatedAt = Date.now();
+    // console.log( 'Store:', refreshTokenStore )
+    // refreshTokenStore[userId] = tokens.refresh_token;
+    // accessTokenCache.set(userId, tokens.access_token, Math.round(tokens.expires_in * 0.75));
+    accessTokenCache.set(tokens.refresh_token, tokens.access_token, Math.round(tokens.expires_in * 0.75));
 
     console.log('       > Received an access token and refresh token');
     return tokens.access_token;
@@ -169,13 +173,15 @@ const exchangeForTokens = async (userId, exchangeProof) => {
   }
 };
 
-const refreshAccessToken = async (userId) => {
+const refreshAccessToken = async ( userId ) =>
+{
+  console.log('Refresh',refreshTokenStore)
   const refreshTokenProof = {
     grant_type: 'refresh_token',
     client_id: CLIENT_ID,
     client_secret: CLIENT_SECRET,
     redirect_uri: REDIRECT_URI,
-    refresh_token: refreshTokenStore[userId]
+    refresh_token: refreshTokenStore.refresh_token
   };
   return await exchangeForTokens(userId, refreshTokenProof);
 };
@@ -183,17 +189,26 @@ const refreshAccessToken = async (userId) => {
 const getAccessToken =  async (userId) => {
   // If the access token has expired, retrieve
   // a new one using the refresh token
-  if (!accessTokenCache.get(userId)) {
-    console.log('Refreshing expired access token');
+  // if (!accessTokenCache.get(userId)) {
+  if (!accessTokenCache.get(refreshTokenStore.refresh_token)) {
+  console.log( 'Refreshing expired access token' );
     await refreshAccessToken(userId);
   }
-  return accessTokenCache.get(userId);
+  return accessTokenCache.get(refreshTokenStore.refresh_token);
 };
+
+// const isAuthorized = (userId) => {
+//   return refreshTokenStore[userId] ? true : false;
+// };
+
 
 const isAuthorized = (userId) => {
-  return refreshTokenStore[userId] ? true : false;
-};
+  return refreshTokenStore.refresh_token;
+}
 
+// const isTokenExpired = () => {
+//   return Date.now() >= refreshTokenStore.updatedAt + refreshTokenStore.expires_in * 1000
+// }
 
 //====================================================//
 //    Creating New Quote                               //
