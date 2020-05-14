@@ -812,7 +812,7 @@ app.post( '/quotes', async ( req, res ) =>
       let updatedDeal = await UpdateDeal( accessToken,deal).then( resultUpdate =>
       { 
         console.log( '=== Succesfully Update Deal from HubSpot using the access token ===' );
-        return resultUpdate && resultUpdate.id && updatedDeal || null;
+        return resultUpdate && resultUpdate.id && resultUpdate || null;
       })
     
       // let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
