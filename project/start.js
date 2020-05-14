@@ -696,10 +696,10 @@ app.get( '/quotes/:quoteId', async( req,res) =>
 app.get( '/quotes', function ( req, res )
 {
 
-  // if ( !isValid(req) )
-  //   res.sendStatus(403)
-  // else
-  // {
+  if ( !isValid(req) )
+    res.sendStatus(403)
+  else
+  {
     
     let userId = req.query.userId;
     let userEmail = req.query.userEmail;
@@ -760,7 +760,7 @@ app.get( '/quotes', function ( req, res )
      
     }
     return res.json( options );
-  // }
+  }
 } );
 
 app.post( '/quotes', async ( req, res ) =>
@@ -869,14 +869,14 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
 app.patch( '/quotes', async( req,res) =>
 {
  
-  console.log('Is Valid' , !isValid( req ) )
-  // if ( !isValid( req ) )
-  //   res.sendStatus( 403 )
-  // else
-  // { 
+  // console.log('Is Valid' , !isValid( req ) )
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
     console.log('REQUEST ==================' , req.headers)
     res.status( 200 ).send( { message: "Successfully Refreshed" } );  
-  // }
+  }
   
 } );
 
