@@ -599,8 +599,9 @@ const isValid = (req) =>
 
     let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
     console.log( 'Params =======>', [ clientSecret, httpMethod, httpURI, body ] )
-    console.log('Source String =======>' ,sourceString)
+    console.log( 'Source String =======>' ,sourceString)
     console.log( 'Request Signature =======>', requestSignature );
+    console.log( 'Hash Without Body =======>', crypto.createHash( 'sha256' ).update( clientSecret + httpMethod + httpURI ).digest( 'hex' ))
     console.log( 'Hash Signature =======>', hash )
     
     if ( hash !== requestSignature )
@@ -871,15 +872,12 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
 app.put( '/deals', async( req,res) =>
 {
  
-  // console.log('Is Valid' , !isValid( req ) )
-  // if ( !isValid( req ) )
-  //   res.sendStatus( 403 )
-  // else
-  // { 
-  console.log( 'REQUEST ==================', req )
-  return res.redirect('https://app.hubspot.com/contacts/7623771/deal/1988038258/')
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
   res.status( 200 ).send( { message: "Successfully Refreshed" } );  
-  // }
+  }
   
 } );
 
