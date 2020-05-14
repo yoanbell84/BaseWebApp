@@ -618,7 +618,7 @@ app.post( '/create-quote', async ( req, res ) =>
     
 } )
 
-app.delete( '/quote', async( req,res) =>
+app.delete( '/quote/:quoteId', async( req,res) =>
 {
   if ( !isValid( req ) )
     res.sendStatus( 403 )
