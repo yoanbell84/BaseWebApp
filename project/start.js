@@ -872,13 +872,14 @@ app.put( '/deals', async( req,res) =>
 {
  
   // console.log('Is Valid' , !isValid( req ) )
-  if ( !isValid( req ) )
-    res.sendStatus( 403 )
-  else
-  { 
-    console.log('REQUEST ==================' , req.headers)
-    res.status( 200 ).send( { message: "Successfully Refreshed" } );  
-  }
+  // if ( !isValid( req ) )
+  //   res.sendStatus( 403 )
+  // else
+  // { 
+  console.log( 'REQUEST ==================', req )
+  res.redirect('https://app.hubspot.com/contacts/7623771/deal/1988038258/')
+  // res.status( 200 ).send( { message: "Successfully Refreshed" } );  
+  // }
   
 } );
 
