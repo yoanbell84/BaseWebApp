@@ -683,10 +683,10 @@ app.get( '/quotes/:quoteId', async( req,res) =>
 app.get( '/quotes', function ( req, res )
 {
 
-  if ( !isValid(req) )
-    res.sendStatus(403)
-  else
-  {
+  // if ( !isValid(req) )
+  //   res.sendStatus(403)
+  // else
+  // {
     
     let userId = req.query.userId;
     let userEmail = req.query.userEmail;
@@ -700,7 +700,7 @@ app.get( '/quotes', function ( req, res )
     let quoteResult = quotes.length > 0 && quotes || getDefaultQuote();
   
     let secondaryOptions = quotes.length > 0 && getSecondaryActions(quotes.map(q=>q.objectId)) || null;
-    
+    console.log('Secondary Options' , secondaryOptions )
     var options = {
       results: quoteResult,
       primaryAction: getPrimaryActions(iframeHttpURI),
@@ -747,7 +747,7 @@ app.get( '/quotes', function ( req, res )
      
     }
     return res.json( options );
-  }
+  // }
 } );
 
 app.post( '/quotes', async ( req, res ) =>
