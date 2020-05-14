@@ -698,13 +698,13 @@ app.get( '/quotes', function ( req, res )
     let iframeHttpURI = `${base_url}/quotes/create?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }&portalId=${portalId}`;
     
     let quoteResult = quotes.length > 0 && quotes || getDefaultQuote();
-  
+    let primaryOption = quotes && quotes.length == 0 && getPrimaryActions( iframeHttpURI ) || null;
     let secondaryOptions = quotes.length > 0 && getSecondaryActions(quotes.map(q=>q.objectId)) || null;
-    console.log('Secondary Options' , secondaryOptions )
+
     var options = {
       results: quoteResult,
-      primaryAction: getPrimaryActions(iframeHttpURI),
-      secondaryAction: secondaryOptions,
+      primaryAction: primaryOption,
+      secondaryActions: secondaryOptions,
       // results: [
       //   {
       //     quote_name: 'Quote Test',
