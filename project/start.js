@@ -620,20 +620,21 @@ app.post( '/create-quote', async ( req, res ) =>
 
 app.delete( '/quote/:quoteId', async( req,res) =>
 {
+  console.log('Request on Delete===================', JSON.stringify(req.headers))
   if ( !isValid( req ) )
     res.sendStatus( 403 )
   else
   { 
     let objectId = req.query.quoteId;
     quotes = quotes.filter( q => q.objectId != objectId );
-    res.status( 200 ).send( { "message": "Successfully deleted object" } );  
+    res.status( 200 ).send( { message: "Successfully deleted object" } );  
   }
   
 } );
 
 app.get( '/quote/:quoteId', async( req,res) =>
 {
-  console.log('Request===================', req)
+  console.log('Request on Edit===================', JSON.stringify(req.headers))
   if ( !isValid( req ) )
     res.sendStatus( 403 )
   else
