@@ -620,27 +620,26 @@ app.post( '/create-quote', async ( req, res ) =>
 
 app.delete( '/quote/:quoteId', async( req,res) =>
 {
-  console.log('Request ========', req)
-  // if ( !isValid( req ) )
-  //   res.sendStatus( 403 )
-  // else
-  // { 
-    let objectId = req.query.quoteId;
-    quotes = [...quotes.filter( q => q.objectId != objectId )];
-    res.status( 200 ).send( { message: "Successfully deleted object" } );  
-  // }
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
+    let objectId = req.params.quoteId;
+    quotes = [ ...quotes.filter( q => q.objectId !== objectId ) ];
+    console.log( 'New Quotes', quotes );
+    res.status( 200 ).send( { message: "Successfully deleted quote" } );  
+  }
   
 } );
 
 app.get( '/quote/:quotedId', async( req,res) =>
 {
-  console.log('Request ========', req)
-  // if ( !isValid( req ) )
-  //   res.sendStatus( 403 )
-  // else
-  // { 
-    res.write( `<div>Editing Quote ${ req.query.quoteId }</div>` );
-  // }
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
+    res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );
+  }
   
 } );
 
@@ -731,7 +730,6 @@ const isValid = (req) =>
 {
 
   let result = true; 
-  console.log('Request ===================', JSON.stringify(req.headers))
   if ( !req.headers[ 'x-hubspot-signature' ] ) result = false;
   else if ( req.headers[ 'x-hubspot-signature' ] )
   { 
