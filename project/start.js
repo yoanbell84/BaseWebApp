@@ -877,8 +877,8 @@ app.put( '/deals', async( req,res) =>
   // else
   // { 
   console.log( 'REQUEST ==================', req )
-  res.redirect('https://app.hubspot.com/contacts/7623771/deal/1988038258/')
-  // res.status( 200 ).send( { message: "Successfully Refreshed" } );  
+  return res.redirect('https://app.hubspot.com/contacts/7623771/deal/1988038258/')
+  res.status( 200 ).send( { message: "Successfully Refreshed" } );  
   // }
   
 } );
