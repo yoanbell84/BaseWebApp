@@ -537,7 +537,7 @@ const isValid = (req) =>
   return result
 }
 
-const createQuoteObj = (name,title, userEmail ,contactEmail) =>
+const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
 { 
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date( Date.now() );
@@ -548,7 +548,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
   const result = {
     objectId: id,
     title: `Quote ${name}`,
-    link: `${ base_url }/quotes/view/${ id }`,
+    link: `${ base_url }/quotes/${ id }`,
     properties: [
       {
         label: "Created",
@@ -566,6 +566,12 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
         label: "Send to",
         dataType: "EMAIL",
         value: contactEmail
+      },
+      {
+        label: "Amount",
+        dataType: "CURRENCY",
+        value: amount,
+        currencyCode: "USD"
       },
       {
         label: "Expiring",
@@ -627,6 +633,11 @@ app.get( '/quotes/create', ( req, res ) =>
 app.get( '/quotes/edit/:quoteId', async( req,res) =>
 {
  res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );   
+} );
+
+app.get( '/quotes/:quoteId', async( req,res) =>
+{
+ res.write( `<div>View Quote ${ req.params.quoteId }</div>` );   
 } );
 
 app.get( '/quotes', function ( req, res )
@@ -778,7 +789,7 @@ app.post( '/quotes', async ( req, res ) =>
       let updatedDeal = await UpdateDeal( accessToken,deal).then( resultUpdate =>
       { 
         console.log( '=== Succesfully Update Deal from HubSpot using the access token ===' );
-        return resultUpdate && resultUpdate.id || 0;
+        return resultUpdate && resultUpdate.id && updatedDeal || null;
       })
     
       // let quoteDeals = quoteId && await asociateQuotesWithDeal( accessToken, dealId, [ quoteId ] ).then( quoteDealResult =>
@@ -786,9 +797,9 @@ app.post( '/quotes', async ( req, res ) =>
       //   console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
       //   console.log( 'Associate Quote=====>', quoteDealResult )
       // } );
-    if ( updatedDeal == 0 ) return res.sendStatus( 400 );
+    if (!updatedDeal) return res.sendStatus( 400 );
   
-  quotes.push( createQuoteObj(req.body.quote_name,req.body.quote_name,userEmail,contactEmail = 'yoanbell84@gmail.com') );
+  quotes.push( createQuoteObj(req.body.quote_name,req.body.quote_name,userEmail,contactEmail = 'yoanbell84@gmail.com', updatedDeal.properties.amount) );
   res.render( 'pages/quote_ok' );
     
 } )
