@@ -863,11 +863,12 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
 
 app.patch( '/quotes/refresh', async( req,res) =>
 {
+  console.log('REQUEST ==================' , req.headers)
   if ( !isValid( req ) )
     res.sendStatus( 403 )
   else
   { 
-   console.log('REQUEST ==================' , req.headers)
+  
     res.status( 200 ).send( { message: "Successfully deleted quote" } );  
   }
   
