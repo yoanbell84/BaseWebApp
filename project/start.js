@@ -620,6 +620,7 @@ app.post( '/create-quote', async ( req, res ) =>
 
 app.delete( '/quote/:quoteId', async( req,res) =>
 {
+  console.log('Request ========', req)
   // if ( !isValid( req ) )
   //   res.sendStatus( 403 )
   // else
