@@ -463,8 +463,9 @@ app.get( '/', async ( req, res ) =>
 } );
 
 
-app.get( '/new-quote', ( req, res ) => 
+app.get( '/quote', ( req, res ) => 
 {
+  console.log('Request New Quote==========================', req)
   userId = req.query.userId;
   dealId = req.query.dealId;
   userEmail = req.query.userEmail;
@@ -760,7 +761,8 @@ app.get( '/quotes', function ( req, res )
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
 
-    let iframeHttpURI = `${base_url}/new-quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
+    // let iframeHttpURI = `${ base_url }/new-quote?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
+    let iframeHttpURI = `${base_url}/quote?userId=${userId}&userEmail=${userEmail}&dealId=${associatedObjectId}`;
     
     let defaultQuote = [
       {
