@@ -624,7 +624,7 @@ app.get( '/quotes/create', ( req, res ) =>
   res.render( 'pages/quote');
 } );
 
-app.get( '/quotes/edit/:quotedId', async( req,res) =>
+app.get( '/quotes/edit/:quoteId', async( req,res) =>
 {
  res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );   
 } );
