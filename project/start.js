@@ -624,6 +624,11 @@ app.get( '/quotes/create', ( req, res ) =>
   res.render( 'pages/quote');
 } );
 
+app.get( '/quotes/:quotedId', async( req,res) =>
+{
+ res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );   
+} );
+
 app.get( '/quotes', function ( req, res )
 {
 
@@ -801,10 +806,7 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
   
 } );
 
-app.get( '/quotes/:quotedId', async( req,res) =>
-{
- res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );   
-} );
+
 
 app.post( '/webhock', ( req, res ) =>
 {
