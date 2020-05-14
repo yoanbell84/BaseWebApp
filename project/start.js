@@ -79,7 +79,7 @@ const getSecondaryActions = ( quoteIds ) =>
       options.push(
       {
           type: "ACTION_HOOK",
-          httpMethod: "PATCH",
+          httpMethod: "PUT",
           uri: `${ base_url }/deals`,
           label: "Refresh deal"
       },
@@ -868,7 +868,7 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
   
 } );
 
-app.patch( '/deals', async( req,res) =>
+app.put( '/deals', async( req,res) =>
 {
  
   // console.log('Is Valid' , !isValid( req ) )
