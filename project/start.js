@@ -625,10 +625,7 @@ app.delete( '/quote/:quoteId', async( req,res) =>
   else
   { 
     let objectId = req.params.quoteId;
-    console.log( 'Object Id', objectId );
-    console.log( 'Quotes', JSON.stringify(quotes.filter( q => q.objectId == objectId )) );
     quotes = [...quotes.filter( q => q.objectId != objectId ) ];
-    console.log( 'New Quotes',  JSON.stringify(quotes)  );
     res.status( 200 ).send( { message: "Successfully deleted quote" } );  
   }
   
