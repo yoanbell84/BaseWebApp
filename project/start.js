@@ -76,7 +76,7 @@ const getSecondaryActions = ( quoteIds ) =>
   { 
     quoteIds.map( id =>
     { 
-      options.push([ {
+      options.push({
       type: "IFRAME",
       width: 800,
       height: 800,
@@ -91,7 +91,7 @@ const getSecondaryActions = ( quoteIds ) =>
       httpMethod: "DELETE",
       uri: `${ base_url }/quotes/${ id }`,
       label: "Delete"
-    } ]);
+    });
     })
   }
 
