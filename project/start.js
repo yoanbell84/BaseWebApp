@@ -41,7 +41,7 @@ var userId, userEmail, dealId = null;
       <input type="hidden" id="userEmail" name="userEmail" value=<%= userEmail %>> -->
       
       */
-const quotes = [];
+let quotes = [];
 
 if (!config.clientId || !config.clientSecret) {
     throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
@@ -625,7 +625,7 @@ app.delete( '/quote/:quoteId', async( req,res) =>
   // else
   // { 
     let objectId = req.query.quoteId;
-    quotes = quotes.filter( q => q.objectId != objectId );
+    quotes = [...quotes.filter( q => q.objectId != objectId )];
     res.status( 200 ).send( { message: "Successfully deleted object" } );  
   // }
   
