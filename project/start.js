@@ -548,7 +548,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
   const result = {
     objectId: id,
     title: `Quote ${name}`,
-    link: `${ base_url }/quote/view/${ id }`,
+    link: `${ base_url }/quotes/view/${ id }`,
     properties: [
       {
         label: "Created",
@@ -577,7 +577,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
       type: "IFRAME",
       width: 800,
       height: 800,
-      uri: `${ base_url }/quote/${id}`,
+      uri: `${ base_url }/quotes/${id}`,
       label: "Edit"
     },
     {
@@ -586,7 +586,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
       confirmButtonText: "Yes",
       cancelButtonText: "No",
       httpMethod: "DELETE",
-      uri: `${ base_url }/quote/${ id }`,
+      uri: `${ base_url }/quotes/${ id }`,
       label: "Delete"
     }
     ]
