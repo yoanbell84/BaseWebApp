@@ -633,7 +633,7 @@ app.delete( '/quote/:quoteId', async( req,res) =>
 
 app.get( '/quote/edit', async( req,res) =>
 {
-  console.log('Request ========', JSON.stringify(req))
+  console.log('Request ========', req)
   // if ( !isValid( req ) )
   //   res.sendStatus( 403 )
   // else
