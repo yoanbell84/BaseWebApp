@@ -463,14 +463,7 @@ app.get( '/', async ( req, res ) =>
 } );
 
 
-app.get( '/quote/create', ( req, res ) => 
-{
-  console.log('Request New Quote==========================', req)
-  userId = req.query.userId;
-  dealId = req.query.dealId;
-  userEmail = req.query.userEmail;
-  res.render( 'pages/quote');
-} );
+
 
 
 //====================================================//
@@ -542,7 +535,7 @@ const getDeal = async ( accessToken,dealId) =>
 };
 
 
-app.post( '/create-quote', async ( req, res ) =>
+app.post( '/quote', async ( req, res ) =>
 {
  
   // let dealId = req.body.dealId;
@@ -746,6 +739,15 @@ const isValid = (req) =>
   }
   return result
 }
+
+app.get( '/quote/create', ( req, res ) => 
+{
+  console.log('Request New Quote==========================', req)
+  userId = req.query.userId;
+  dealId = req.query.dealId;
+  userEmail = req.query.userEmail;
+  res.render( 'pages/quote');
+} );
 
 app.get( '/quotes', function ( req, res )
 {
