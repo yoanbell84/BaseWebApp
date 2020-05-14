@@ -631,7 +631,7 @@ app.delete( '/quote/:quoteId', async( req,res) =>
   
 } );
 
-app.get( '/quote/edit', async( req,res) =>
+app.get( '/quote/:quotedId', async( req,res) =>
 {
   console.log('Request ========', req)
   // if ( !isValid( req ) )
@@ -683,7 +683,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
       type: "IFRAME",
       width: 800,
       height: 800,
-      uri: `${ base_url }/quote/edit`,
+      uri: `${ base_url }/quote/${id}`,
       label: "Edit"
     },
     {
@@ -697,8 +697,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
     }
     ]
   };
-  console.log( 'Result=============>', result );
-  console.log( 'Result=============>', JSON.stringify( result ) );
+
   return result 
 }
 
@@ -749,7 +748,7 @@ const isValid = (req) =>
   return result
 }
 
-app.get( '/quote', function ( req, res )
+app.get( '/quotes', function ( req, res )
 {
 
   if ( !isValid(req) )
