@@ -591,7 +591,7 @@ const isValid = (req) =>
     var requestSignature = req.headers[ 'x-hubspot-signature' ];
     let clientSecret = process.env.CLIENT_SECRET;
     let httpMethod = req.method;
-    let body = JSON.stringify(req.body);
+    let body = Object.keys(req.body).length === 0 ? null : JSON.stringify(req.body);
     let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.url;
    
     let sourceString = clientSecret + httpMethod + httpURI;
