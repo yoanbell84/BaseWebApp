@@ -765,7 +765,7 @@ app.get( '/get-quotes', function ( req, res )
     let portalId = req.query.portalId;
 
     // let iframeHttpURI = `${ base_url }/new-quote?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
-    let iframeHttpURI = `${base_url}/quotes/create`;
+    let iframeHttpURI = `${base_url}/quotes/create?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
     
     let defaultQuote = [
       {
