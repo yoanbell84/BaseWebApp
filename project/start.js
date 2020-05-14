@@ -864,13 +864,13 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
 app.post( '/deals/refresh', async( req,res) =>
 {
  
-  if ( !isValid( req ) )
-    res.sendStatus( 403 )
-  else
-  { 
+  // if ( !isValid( req ) )
+  //   res.sendStatus( 403 )
+  // else
+  // { 
     console.log('REQUEST ==================' , req.headers)
     res.status( 200 ).send( { message: "Successfully Refreshed" } );  
-  }
+  // }
   
 } );
 
