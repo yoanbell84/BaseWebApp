@@ -536,7 +536,7 @@ const getDeal = async ( accessToken,dealId) =>
 
 app.get( '/quotes/create', ( req, res ) => 
 {
-  console.log('Request New Quote==========================', req)
+  console.log('Request New Quote==========================', req.headers)
   userId = req.query.userId;
   dealId = req.query.dealId;
   userEmail = req.query.userEmail;
