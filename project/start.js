@@ -620,7 +620,6 @@ app.post( '/create-quote', async ( req, res ) =>
 
 app.delete( '/quote', async( req,res) =>
 {
-  console.log('Request on Delete===================', JSON.stringify(req.headers))
   if ( !isValid( req ) )
     res.sendStatus( 403 )
   else
@@ -634,7 +633,7 @@ app.delete( '/quote', async( req,res) =>
 
 app.get( '/quote/:quoteId', async( req,res) =>
 {
-  console.log('Request on Edit===================', JSON.stringify(req.headers))
+  
   if ( !isValid( req ) )
     res.sendStatus( 403 )
   else
@@ -732,6 +731,7 @@ const isValid = (req) =>
 {
 
   let result = true; 
+  console.log('Request ===================', JSON.stringify(req.headers))
   if ( !req.headers[ 'x-hubspot-signature' ] ) result = false;
   else if ( req.headers[ 'x-hubspot-signature' ] )
   { 
