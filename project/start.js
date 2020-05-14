@@ -43,6 +43,63 @@ var userId, userEmail, dealId = null;
       */
 let quotes = [];
 
+const getDefaultQuote = () =>
+{ 
+  return [
+    {
+      title: 'Quote',
+      link: null,
+      objectId: 1,
+      properties: [ {
+        label: "Status",
+        dataType: "STATUS",
+        optionType: "WARNING",
+        value: "Not created"
+      } ]
+    } ]
+};
+
+const getPrimaryActions = (actionUrl,label = "Create CRM Quote") =>
+{ 
+  return {
+    type: "IFRAME",
+    width: 800,
+    height: 800,
+    uri: actionUrl,
+    label: label
+  };
+}
+const getSecondaryActions = ( quoteIds ) =>
+{
+  let options = [];
+  if ( quoteIds && quoteIds.length > 0 )
+  { 
+    quoteIds.map( id =>
+    { 
+      options.push([ {
+      type: "IFRAME",
+      width: 800,
+      height: 800,
+      uri: `${ base_url }/quotes/edit/${ id }`,
+      label: "Edit"
+    },
+    {
+      type: "CONFIRMATION_ACTION_HOOK",
+      confirmationMessage: "Are you sure you want to delete this quote",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      httpMethod: "DELETE",
+      uri: `${ base_url }/quotes/${ id }`,
+      label: "Delete"
+    } ]);
+    })
+  }
+
+  return options;
+ 
+} 
+
+
 if (!config.clientId || !config.clientSecret) {
     throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
 }
@@ -578,23 +635,6 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
         dataType: "DATE",
         value: expiringDate
       }
-    ],
-    actions: [ {
-      type: "IFRAME",
-      width: 800,
-      height: 800,
-      uri: `${ base_url }/quotes/edit/${id}`,
-      label: "Edit"
-    },
-    {
-      type: "CONFIRMATION_ACTION_HOOK",
-      confirmationMessage: "Are you sure you want to delete this quote",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      httpMethod: "DELETE",
-      uri: `${ base_url }/quotes/${ id }`,
-      label: "Delete"
-    }
     ]
   };
 
@@ -657,31 +697,14 @@ app.get( '/quotes', function ( req, res )
     // let iframeHttpURI = `${ base_url }/new-quote?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
     let iframeHttpURI = `${base_url}/quotes/create?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }&portalId=${portalId}`;
     
-    let defaultQuote = [
-      {
-        title: 'Quote',
-        link:null,
-        objectId: 1,
-        properties: [{
-          label: "Status",
-          dataType: "STATUS",
-          optionType: "WARNING",
-          value: "Not created"
-        }]
-    }]
-    let quoteResult = quotes.length > 0 && quotes || defaultQuote;
-    
-    let defaultPrimaryOptions = quotes.length == 0 && {
-      type: "IFRAME",
-      width: 800,
-      height: 800,
-      uri: iframeHttpURI,
-      label: "Create CRM Quote"
-    } || null;
+    let quoteResult = quotes.length > 0 && quotes || getDefaultQuote();
+  
+    let secondaryOptions = quotes.length > 0 && getSecondaryActions(quotes.map(q=>q.objectId)) || null;
     
     var options = {
       results: quoteResult,
-      primaryAction: defaultPrimaryOptions
+      primaryAction: getPrimaryActions(iframeHttpURI),
+      secondaryAction: secondaryOptions,
       // results: [
       //   {
       //     quote_name: 'Quote Test',
