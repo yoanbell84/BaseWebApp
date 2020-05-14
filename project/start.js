@@ -620,26 +620,26 @@ app.post( '/create-quote', async ( req, res ) =>
 
 app.delete( '/quote/:quoteId', async( req,res) =>
 {
-  if ( !isValid( req ) )
-    res.sendStatus( 403 )
-  else
-  { 
+  // if ( !isValid( req ) )
+  //   res.sendStatus( 403 )
+  // else
+  // { 
     let objectId = req.query.quoteId;
     quotes = quotes.filter( q => q.objectId != objectId );
     res.status( 200 ).send( { message: "Successfully deleted object" } );  
-  }
+  // }
   
 } );
 
 app.get( '/quote/edit/:quoteId', async( req,res) =>
 {
   
-  if ( !isValid( req ) )
-    res.sendStatus( 403 )
-  else
-  { 
+  // if ( !isValid( req ) )
+  //   res.sendStatus( 403 )
+  // else
+  // { 
     res.write( `<div>Editing Quote ${ req.query.quoteId }</div>` );
-  }
+  // }
   
 } );
 
