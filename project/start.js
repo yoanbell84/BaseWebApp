@@ -48,6 +48,14 @@ if (!config.clientId || !config.clientSecret) {
 }
 
 
+app.set('port', PORT);
+app.use( express.static( __dirname ) );
+
+// views is directory for all template files
+app.set('views', __dirname + '/html');
+app.set( 'view engine', 'ejs' );
+
+
 //===========================================================================//
 //  HUBSPOT APP CONFIGURATION
 //
@@ -439,32 +447,6 @@ const asociateQuotesWithDeal = async ( accessToken, dealId, quoteIds ) =>
   return result;
 };
 
-app.set('port', PORT);
-
-app.use(express.static(__dirname));
-
-// views is directory for all template files
-app.set('views', __dirname + '/html');
-app.set('view engine', 'ejs');
-
-app.get( '/', async ( req, res ) => 
-{
-  if ( !isAuthorized( req.sessionID ) )
-  {
-    res.redirect( authUrl );
-  }
-  else
-  { 
-    const accessToken = await getAccessToken(req.sessionID);
-    res.render( 'pages/index', {token: accessToken} );
-  }
-  res.end();
-  
-} );
-
-
-
-
 
 //====================================================//
 //   Update a deal                                    //
@@ -534,13 +516,199 @@ const getDeal = async ( accessToken,dealId) =>
   return result;
 };
 
+const isValid = (req) =>
+{
+
+  let result = true; 
+  if ( !req.headers[ 'x-hubspot-signature' ] ) result = false;
+  else if ( req.headers[ 'x-hubspot-signature' ] )
+  { 
+    var requestSignature = req.headers[ 'x-hubspot-signature' ];
+    let clientSecret = process.env.CLIENT_SECRET;
+    let httpMethod = req.method;
+    let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.url;
+   
+    let sourceString = clientSecret + httpMethod + httpURI;
+    let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
+   
+    if ( hash !== requestSignature )
+      result = false;
+  }
+  return result
+}
+
+const createQuoteObj = (name,title, userEmail ,contactEmail) =>
+{ 
+  let id = Math.floor( Math.random() * 100001 );
+  var today = new Date( Date.now() );
+  var date = today.toISOString().split( 'T' )[ 0 ];
+  today.setMonth((today.getMonth() + 1) + 2);
+  var expiringDate = today.toISOString().split( 'T' )[ 0 ];
+  
+  const result = {
+    objectId: id,
+    title: `Quote ${name}`,
+    link: `${ base_url }/quote/view/${ id }`,
+    properties: [
+      {
+        label: "Created",
+        dataType: "DATE",
+        value: date
+      },
+      {
+        label: "Status",
+        name: "status",
+        dataType: "STATUS",
+        optionType: "SUCCESS",
+        value: "Ready to Send"
+      },
+      {
+        label: "Send to",
+        dataType: "EMAIL",
+        value: contactEmail
+      },
+      {
+        label: "Expiring",
+        dataType: "DATE",
+        value: expiringDate
+      }
+    ],
+    actions: [ {
+      type: "IFRAME",
+      width: 800,
+      height: 800,
+      uri: `${ base_url }/quote/${id}`,
+      label: "Edit"
+    },
+    {
+      type: "CONFIRMATION_ACTION_HOOK",
+      confirmationMessage: "Are you sure you want to delete this quote",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      httpMethod: "DELETE",
+      uri: `${ base_url }/quote/${ id }`,
+      label: "Delete"
+    }
+    ]
+  };
+
+  return result 
+}
+
+
+//====================================================//
+//   Routes                                           //
+//====================================================//
+
+app.get( '/', async ( req, res ) => 
+{
+  if ( !isAuthorized( req.sessionID ) )
+  {
+    res.redirect( authUrl );
+  }
+  else
+  { 
+    const accessToken = await getAccessToken(req.sessionID);
+    res.render( 'pages/index', {token: accessToken} );
+  }
+  res.end();
+  
+} );
+
 app.get( '/quotes/create', ( req, res ) => 
 {
-  console.log('Request New Quote==========================', req.headers)
   userId = req.query.userId;
   dealId = req.query.dealId;
   userEmail = req.query.userEmail;
+  res.header( 'first_name', 'HelloWorld' );
   res.render( 'pages/quote');
+} );
+
+app.get( '/quotes', function ( req, res )
+{
+
+  if ( !isValid(req) )
+    res.sendStatus(403)
+  else
+  {
+    
+    let userId = req.query.userId;
+    let userEmail = req.query.userEmail;
+    let associatedObjectId = req.query.associatedObjectId;
+    let associatedObjectType = req.query.associatedObjectType;
+    let portalId = req.query.portalId;
+
+    // let iframeHttpURI = `${ base_url }/new-quote?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
+    let iframeHttpURI = `${base_url}/quotes/create?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }&portalId=${portalId}`;
+    
+    let defaultQuote = [
+      {
+        title: 'Quote',
+        link:null,
+        objectId: 1,
+        properties: [{
+          label: "Status",
+          dataType: "STATUS",
+          optionType: "WARNING",
+          value: "Not created"
+        }]
+    }]
+    let quoteResult = quotes.length > 0 && quotes || defaultQuote;
+    
+    let defaultPrimaryOptions = quotes.length == 0 && {
+      type: "IFRAME",
+      width: 800,
+      height: 800,
+      uri: iframeHttpURI,
+      label: "Create CRM Quote"
+    } || null;
+    
+    var options = {
+      results: quoteResult,
+      primaryAction: defaultPrimaryOptions
+      // results: [
+      //   {
+      //     quote_name: 'Quote Test',
+      //     objectId: 232,
+      //     title: 'Test-Yoan',
+      //     link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
+      //     properties: [
+      //       {
+      //         label: "Seller",
+      //         dataType: "EMAIL",
+      //         value: "ybell@easyworkforce.com"
+      //       },
+      //       {
+      //         label: "Amount",
+      //         dataType: "CURRENCY",
+      //         value: "150",
+      //         currencyCode: "USD"
+      //       }
+      //     ],
+      //     actions: [
+      //       {
+      //         type: "IFRAME",
+      //         width: 800,
+      //         height: 800,
+      //         uri: "https://tools.hubteam.com/integrations-iframe-test-app",
+      //         label: "Edit"
+      //       },
+      //       {
+      //         type: "CONFIRMATION_ACTION_HOOK",
+      //         confirmationMessage: "Are you sure you want to delete this quote",
+      //         confirmButtonText: "Yes",
+      //         cancelButtonText: "No",
+      //         httpMethod: "DELETE",
+      //         uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
+      //         label: "Delete"
+      //       }
+      //     ]
+      //   }
+      // ],
+     
+    }
+    return res.json( options );
+  }
 } );
 
 app.post( '/quotes', async ( req, res ) =>
@@ -635,73 +803,8 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
 
 app.get( '/quotes/:quotedId', async( req,res) =>
 {
-  if ( !isValid( req ) )
-    res.sendStatus( 403 )
-  else
-  { 
-    res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );
-  }
-  
+ res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );   
 } );
-
-const createQuoteObj = (name,title, userEmail ,contactEmail) =>
-{ 
-  let id = Math.floor( Math.random() * 100001 );
-  var today = new Date( Date.now() );
-  var date = today.toISOString().split( 'T' )[ 0 ];
-  today.setMonth((today.getMonth() + 1) + 2);
-  var expiringDate = today.toISOString().split( 'T' )[ 0 ];
-  
-  const result = {
-    objectId: id,
-    title: `Quote ${name}`,
-    link: `${ base_url }/quote/view/${ id }`,
-    properties: [
-      {
-        label: "Created",
-        dataType: "DATE",
-        value: date
-      },
-      {
-        label: "Status",
-        name: "status",
-        dataType: "STATUS",
-        optionType: "SUCCESS",
-        value: "Ready to Send"
-      },
-      {
-        label: "Send to",
-        dataType: "EMAIL",
-        value: contactEmail
-      },
-      {
-        label: "Expiring",
-        dataType: "DATE",
-        value: expiringDate
-      }
-    ],
-    actions: [ {
-      type: "IFRAME",
-      width: 800,
-      height: 800,
-      uri: `${ base_url }/quote/${id}`,
-      label: "Edit"
-    },
-    {
-      type: "CONFIRMATION_ACTION_HOOK",
-      confirmationMessage: "Are you sure you want to delete this quote",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      httpMethod: "DELETE",
-      uri: `${ base_url }/quote/${ id }`,
-      label: "Delete"
-    }
-    ]
-  };
-
-  return result 
-}
-
 
 app.post( '/webhock', ( req, res ) =>
 {
@@ -724,120 +827,6 @@ app.post( '/webhock', ( req, res ) =>
   }
   res.end();
 
-} );
-
-
-const isValid = (req) =>
-{
-
-  let result = true; 
-  if ( !req.headers[ 'x-hubspot-signature' ] ) result = false;
-  else if ( req.headers[ 'x-hubspot-signature' ] )
-  { 
-    var requestSignature = req.headers[ 'x-hubspot-signature' ];
-    let clientSecret = process.env.CLIENT_SECRET;
-    let httpMethod = req.method;
-    let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.url;
-   
-    let sourceString = clientSecret + httpMethod + httpURI;
-    let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
-   
-    if ( hash !== requestSignature )
-      result = false;
-  }
-  return result
-}
-
-
-
-app.get( '/get-quotes', function ( req, res )
-{
-
-  if ( !isValid(req) )
-    res.sendStatus(403)
-  else
-  {
-    
-    let userId = req.query.userId;
-    let userEmail = req.query.userEmail;
-    let associatedObjectId = req.query.associatedObjectId;
-    let associatedObjectType = req.query.associatedObjectType;
-    let portalId = req.query.portalId;
-
-    // let iframeHttpURI = `${ base_url }/new-quote?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
-    let iframeHttpURI = `${base_url}/quotes/create?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
-    
-    let defaultQuote = [
-      {
-        title: 'Quote',
-        link:null,
-        objectId: 1,
-        properties: [{
-          label: "Status",
-          dataType: "STATUS",
-          optionType: "WARNING",
-          value: "Not created"
-        }]
-    }]
-    let quoteResult = quotes.length > 0 && quotes || defaultQuote;
-    
-    let defaultPrimaryOptions = quotes.length == 0 && {
-      type: "IFRAME",
-      width: 800,
-      height: 800,
-      uri: iframeHttpURI,
-      associatedObjectProperties: [
-        "hs_object_id"
-      ],
-      label: "Create CRM Quote"
-    } || null;
-    
-    var options = {
-      results: quoteResult,
-      primaryAction: defaultPrimaryOptions
-      // results: [
-      //   {
-      //     quote_name: 'Quote Test',
-      //     objectId: 232,
-      //     title: 'Test-Yoan',
-      //     link: 'https://enigmatic-tor-68993.herokuapp.com/test-yoan',
-      //     properties: [
-      //       {
-      //         label: "Seller",
-      //         dataType: "EMAIL",
-      //         value: "ybell@easyworkforce.com"
-      //       },
-      //       {
-      //         label: "Amount",
-      //         dataType: "CURRENCY",
-      //         value: "150",
-      //         currencyCode: "USD"
-      //       }
-      //     ],
-      //     actions: [
-      //       {
-      //         type: "IFRAME",
-      //         width: 800,
-      //         height: 800,
-      //         uri: "https://tools.hubteam.com/integrations-iframe-test-app",
-      //         label: "Edit"
-      //       },
-      //       {
-      //         type: "CONFIRMATION_ACTION_HOOK",
-      //         confirmationMessage: "Are you sure you want to delete this quote",
-      //         confirmButtonText: "Yes",
-      //         cancelButtonText: "No",
-      //         httpMethod: "DELETE",
-      //         uri: "https://api.hubapi.com/linked-sales-objects-test-application/v1/actions/demo-ticket/988",
-      //         label: "Delete"
-      //       }
-      //     ]
-      //   }
-      // ],
-     
-    }
-    return res.json( options );
-  }
 } );
 
 
@@ -921,39 +910,6 @@ app.get( '/company-detail', function ( req, res )
   }
  
 } );
-
-
-
-const getExistingObjectDealById = async ( id = 100777 ) => { 
-  try
-  { 
-    const headers = {
-      // Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json'
-    };
-    console.log('===> request.get(\'https://api.hubapi.com/extensions/sales-objects/v1/object-types/\')');
-    const result = await request.get('https://api.hubapi.com/extensions/sales-objects/v1/object-types/'+id+'?hapikey='+config.devApiKey, {
-      headers: headers,      
-    } );
-    console.log('Getting deal info' , JSON.stringify(result, null,2))
-    return result
-  } catch (e) {
-    console.error( '  > Unable to retrieve deal ===>',e.message );
-    process.exit( 0 );
-    // return JSON.parse(e.response.body);
-  }
-} 
-
-app.get( '/deal-type', async ( req, res ) => 
-{ 
-  const objects = await getExistingObjectDealById();
-    res.type('application/json')
-    // res.write( `<a href="/"><h3>Back</h3></a>` );
-    // res.write( `<div id='content'>${JSON.parse(objects)}</div>` );
-   res.send(objects)
-   
-  
-})
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
