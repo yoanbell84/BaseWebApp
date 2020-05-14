@@ -534,7 +534,7 @@ const getDeal = async ( accessToken,dealId) =>
   return result;
 };
 
-app.get( '/quote/create', ( req, res ) => 
+app.get( '/quotes/create', ( req, res ) => 
 {
   console.log('Request New Quote==========================', req)
   userId = req.query.userId;
@@ -543,7 +543,7 @@ app.get( '/quote/create', ( req, res ) =>
   res.render( 'pages/quote');
 } );
 
-app.post( '/quote', async ( req, res ) =>
+app.post( '/quotes', async ( req, res ) =>
 {
  
   // let dealId = req.body.dealId;
@@ -620,7 +620,7 @@ app.post( '/quote', async ( req, res ) =>
     
 } )
 
-app.delete( '/quote/:quoteId', async( req,res) =>
+app.delete( '/quotes/:quoteId', async( req,res) =>
 {
   if ( !isValid( req ) )
     res.sendStatus( 403 )
@@ -633,7 +633,7 @@ app.delete( '/quote/:quoteId', async( req,res) =>
   
 } );
 
-app.get( '/quote/:quotedId', async( req,res) =>
+app.get( '/quotes/:quotedId', async( req,res) =>
 {
   if ( !isValid( req ) )
     res.sendStatus( 403 )
@@ -750,7 +750,7 @@ const isValid = (req) =>
 
 
 
-app.get( '/quotes', function ( req, res )
+app.get( '/get-quotes', function ( req, res )
 {
 
   if ( !isValid(req) )
@@ -765,7 +765,7 @@ app.get( '/quotes', function ( req, res )
     let portalId = req.query.portalId;
 
     // let iframeHttpURI = `${ base_url }/new-quote?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }`;
-    let iframeHttpURI = `${base_url}/quote/create`;
+    let iframeHttpURI = `${base_url}/quotes/create`;
     
     let defaultQuote = [
       {
