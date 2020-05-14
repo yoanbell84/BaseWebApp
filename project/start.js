@@ -787,7 +787,7 @@ app.get( '/get-quotes', function ( req, res )
       height: 800,
       uri: iframeHttpURI,
       associatedObjectProperties: [
-        "associatedObjectId"
+        "hs_object_id"
       ],
       label: "Create CRM Quote"
     } || null;
