@@ -598,9 +598,11 @@ const isValid = (req) =>
     if ( body ) sourceString = clientSecret + httpMethod + httpURI + body;
 
     let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
+    console.log( 'Params =======>', [ clientSecret, httpMethod, httpURI, body ] )
+    console.log('Source String =======>' ,sourceString)
     console.log( 'Request Signature =======>', requestSignature );
     console.log( 'Hash Signature =======>', hash )
-    console.log('Params =======>' , [clientSecret,httpMethod,httpURI,body])
+    
     if ( hash !== requestSignature )
       result = false;
   }
