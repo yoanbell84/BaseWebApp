@@ -577,7 +577,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
       type: "IFRAME",
       width: 800,
       height: 800,
-      uri: `${ base_url }/quotes/${id}`,
+      uri: `${ base_url }/quotes/edit/${id}`,
       label: "Edit"
     },
     {
@@ -624,7 +624,7 @@ app.get( '/quotes/create', ( req, res ) =>
   res.render( 'pages/quote');
 } );
 
-app.get( '/quotes/:quotedId', async( req,res) =>
+app.get( '/quotes/edit/:quotedId', async( req,res) =>
 {
  res.write( `<div>Editing Quote ${ req.params.quoteId }</div>` );   
 } );
@@ -792,6 +792,19 @@ app.post( '/quotes', async ( req, res ) =>
   res.render( 'pages/quote_ok' );
     
 } )
+
+// app.put( '/quotes/:quoteId', async( req,res) =>
+// {
+//   if ( !isValid( req ) )
+//     res.sendStatus( 403 )
+//   else
+//   { 
+//     let objectId = req.params.quoteId;
+//     quotes = [...quotes.filter( q => q.objectId != objectId ) ];
+//     res.status( 200 ).send( { message: "Successfully deleted quote" } );  
+//   }
+  
+// } );
 
 app.delete( '/quotes/:quoteId', async( req,res) =>
 {
