@@ -76,24 +76,32 @@ const getSecondaryActions = ( quoteIds ) =>
   { 
     quoteIds.map( id =>
     { 
-      options.push({
-      type: "IFRAME",
-      width: 800,
-      height: 800,
-      uri: `${ base_url }/quotes/edit/${ id }`,
-      label: "Edit"
-    },
-    {
-      type: "CONFIRMATION_ACTION_HOOK",
-      confirmationMessage: "Are you sure you want to delete this quote",
-      confirmButtonText: "Yes",
-      cancelButtonText: "No",
-      httpMethod: "DELETE",
-      uri: `${ base_url }/quotes/${ id }`,
-      label: "Delete"
-    });
-    })
-  }
+      options.push(
+      {
+          type: "ACTION_HOOK",
+          httpMethod: "PATCH",
+          uri: `${ base_url }/quotes/refresh`,
+          label: "Refresh deal"
+      },
+      {
+          type: "IFRAME",
+          width: 800,
+          height: 800,
+          uri: `${ base_url }/quotes/edit/${ id }`,
+          label: "Edit"
+      },
+      {
+          type: "CONFIRMATION_ACTION_HOOK",
+          confirmationMessage: "Are you sure you want to delete this quote",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+          httpMethod: "DELETE",
+          uri: `${ base_url }/quotes/${ id }`,
+          label: "Delete"
+      }
+    );
+  })
+}
 
   return options;
  
@@ -852,6 +860,20 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
   }
   
 } );
+
+app.patch( '/quotes/refresh', async( req,res) =>
+{
+  if ( !isValid( req ) )
+    res.sendStatus( 403 )
+  else
+  { 
+   console.log('REQUEST ==================' , req.headers)
+    res.status( 200 ).send( { message: "Successfully deleted quote" } );  
+  }
+  
+} );
+
+
 
 
 
