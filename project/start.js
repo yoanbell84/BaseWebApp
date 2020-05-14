@@ -631,7 +631,7 @@ app.delete( '/quote/:quoteId', async( req,res) =>
   
 } );
 
-app.get( '/quote/:quoteId', async( req,res) =>
+app.get( '/quote/edit/:quoteId', async( req,res) =>
 {
   
   if ( !isValid( req ) )
@@ -683,7 +683,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail) =>
       type: "IFRAME",
       width: 800,
       height: 800,
-      uri: `${ base_url }/quote/${ id }`,
+      uri: `${ base_url }/quote/edit/${ id }`,
       label: "Edit"
     },
     {
