@@ -591,11 +591,16 @@ const isValid = (req) =>
     var requestSignature = req.headers[ 'x-hubspot-signature' ];
     let clientSecret = process.env.CLIENT_SECRET;
     let httpMethod = req.method;
+    let body = JSON.stringify(req.body);
     let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.url;
    
     let sourceString = clientSecret + httpMethod + httpURI;
+    if ( body ) sourceString = clientSecret + httpMethod + httpURI + body;
+
     let hash = crypto.createHash( 'sha256' ).update( sourceString ).digest( 'hex' );
-   
+    consdole.log( 'Request Signature =======>', requestSignature );
+    consdole.log( 'Hash Signature =======>', hash )
+    consdole.log('Params =======>' , [clientSecret,httpMethod,httpURI,body])
     if ( hash !== requestSignature )
       result = false;
   }
@@ -864,7 +869,7 @@ app.delete( '/quotes/:quoteId', async( req,res) =>
 app.patch( '/quotes', async( req,res) =>
 {
  
-  console.log('Is Valid' , isValid( req ) )
+  console.log('Is Valid' , !isValid( req ) )
   // if ( !isValid( req ) )
   //   res.sendStatus( 403 )
   // else
