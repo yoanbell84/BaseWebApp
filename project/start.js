@@ -3,13 +3,25 @@ const NodeCache = require('node-cache');
 const session = require( 'express-session' );
 const request = require( 'request-promise-native' );
 const redis = require( 'redis' );
+const FirebaseStore = require( 'connect-session-firebase' )( session );
+
+const firebase = require( 'firebase-admin' );
+
 var app = express();
 app.use(express.json());       // to support JSON-encoded bodies
 app.use( express.urlencoded({ extended: true }) ); // to support URL-encoded bodies
 
+
 const crypto = require( 'crypto' );
 const config = require('../config');
 const PORT = (process.env.PORT || 5000);
+
+const serviceAccount = require( '../serviceAccountCredentials.json' );
+const ref = firebase.initializeApp({
+  credential: firebase.credential.cert(config.firebaseServiceAccount),
+  databaseURL: config.firebaseDatabaseUrl
+});
+
 
 let refreshTokenStore = {};
 const accessTokenCache = new NodeCache( { deleteOnExpire: true } );
@@ -150,12 +162,23 @@ const REDIRECT_URI = config.nodeMode == 'DEBUG' ? `http://localhost:${ PORT }/oa
 
 //===========================================================================//
 
-// Use a session to keep track of client ID
-app.use(session({
-  secret: Math.random().toString(36).substring(2),
-  resave: false,
-  saveUninitialized: true
-}));
+// // Use a session to keep track of client ID
+// app.use(session({
+//   secret: Math.random().toString(36).substring(2),
+//   resave: false,
+//   saveUninitialized: true
+// }));
+
+ 
+express()
+  .use(session({
+    store: new FirebaseStore({
+      database: ref.database()
+    }),
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+  }));
  
 //================================//
 //   Running the OAuth 2.0 Flow   //
