@@ -1,14 +1,10 @@
 var express = require( 'express' );
+const config = require( '../config' );
 const NodeCache = require('node-cache');
 const redis = require( 'redis' );
 const session = require( 'express-session' );
 let RedisStore = require( 'connect-redis' )( session );
 const request = require( 'request-promise-native' );
-
-const config = require( '../config' );
-
-
-
 let redisClient = redis.createClient( config.redisURL );
 redisClient.on( 'error', ( err ) =>
 {
@@ -189,7 +185,7 @@ const REDIRECT_URI = config.nodeENV == 'local' ? `http://localhost:${ PORT }/oau
  
 app.use(session({
   store: config.nodeENV === 'production' ?
-    new RedisStore( { url: config.redisURL } )
+    new RedisStore({ client: redisClient })
     : null,
   secret: 'ThisIsHowYouUseRedisSessionStorage',
   name: '_redisPractice',
