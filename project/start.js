@@ -25,6 +25,19 @@ const ref = firebase.initializeApp( {
 let refreshTokenStore = {};
 const accessTokenCache = new NodeCache( { deleteOnExpire: true } );
 
+if (!config.hubspotClientId || !config.hubspotClientSecret) {
+  throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
+}
+
+
+app.set('port', PORT);
+app.use( express.static( __dirname ) );
+
+// views is directory for all template files
+app.set('views', __dirname + '/html');
+app.set( 'view engine', 'ejs' );
+
+
 const productList = [
   {
       hs_product_id: 101043994,
@@ -44,14 +57,6 @@ const productList = [
 ]
 
 var userId, userEmail, dealId = null;
-
-
-/*
-      <!-- <input type="hidden" id="dealId" name="dealId" value=<%= dealId %>>
-      <input type="hidden" id="userId" name="userId" value=<%= userId %>>
-      <input type="hidden" id="userEmail" name="userEmail" value=<%= userEmail %>> -->
-      
-      */
 let quotes = [];
 
 const getDefaultQuote = () =>
@@ -119,17 +124,6 @@ const getSecondaryActions = ( quoteIds ) =>
 } 
 
 
-if (!config.hubspotClientId || !config.hubspotClientSecret) {
-    throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
-}
-
-
-app.set('port', PORT);
-app.use( express.static( __dirname ) );
-
-// views is directory for all template files
-app.set('views', __dirname + '/html');
-app.set( 'view engine', 'ejs' );
 
 
 //===========================================================================//
