@@ -3,8 +3,8 @@ const NodeCache = require('node-cache');
 const session = require( 'express-session' );
 const request = require( 'request-promise-native' );
 const redis = require( 'redis' );
+const config = require('../config');
 const FirebaseStore = require( 'connect-session-firebase' )( session );
-
 const firebase = require( 'firebase-admin' );
 
 var app = express();
@@ -13,11 +13,10 @@ app.use( express.urlencoded({ extended: true }) ); // to support URL-encoded bod
 
 
 const crypto = require( 'crypto' );
-const config = require('../config');
-const PORT = (process.env.PORT || 5000);
+const PORT = (config.port || 5000);
 
-const serviceAccount = require( '../serviceAccountCredentials.json' );
-const ref = firebase.initializeApp({
+
+const ref = firebase.initializeApp( {
   credential: firebase.credential.cert(config.firebaseServiceAccount),
   databaseURL: config.firebaseDatabaseUrl
 });
@@ -120,7 +119,7 @@ const getSecondaryActions = ( quoteIds ) =>
 } 
 
 
-if (!config.clientId || !config.clientSecret) {
+if (!config.hubspotClientId || !config.hubspotClientSecret) {
     throw new Error('Missing CLIENT_ID or CLIENT_SECRET environment variable.')
 }
 
@@ -143,15 +142,15 @@ app.set( 'view engine', 'ejs' );
 
 // Replace the following with the values from your app auth config, 
 // or set them as environment variables before running.
-const CLIENT_ID = config.clientId;
-const CLIENT_SECRET = config.clientSecret;
+const CLIENT_ID = config.hubspotClientId;
+const CLIENT_SECRET = config.hubspotClientSecret;
 
 
 // Scopes for this app will default to `contacts`
 // To request others, set the SCOPE environment variable instead
 let SCOPES = ['contacts'];
-if (config.scope) {
-    SCOPES = (config.scope.split(/ |, ?|%20/)).join(' ');
+if (config.hubspotScope) {
+    SCOPES = (config.hubspotScope.split(/ |, ?|%20/)).join(' ');
 }
 
 // On successful install, users will be redirected to /oauth-callback

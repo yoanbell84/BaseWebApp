@@ -2,12 +2,13 @@
 const dotenv = require('dotenv');
 dotenv.config();
 module.exports = {
-  clientId: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
+  hubspotClientId: process.env.HUBSPOT_CLIENT_ID,
+  hubspotClientSecret: process.env.HUBSPOT_CLIENT_SECRET,
+  hubspotWebhockUrl:process.env.HUBSPOT_WEBHOCK_URL,
   port: process.env.PORT,
-  scope: process.env.SCOPE,
+  hubspotScope: process.env.HUBSPOT_SCOPE,
   nodeMode: process.env.NODE_MODE,
-  devApiKey: process.env.DEV_API_KEY,
+  hubspotDevApiKey: process.env.HUBSPOT_DEV_API_KEY,
   firebaseDatabaseUrl: process.env.FIREBASE_DATABASE_URL,
   firebaseServiceAccount: { 
     type: process.env.FIREBASE_TYPE,
