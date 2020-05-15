@@ -5,7 +5,11 @@ const redis = require( 'redis' );
 const session = require( 'express-session' );
 let RedisStore = require( 'connect-redis' )( session );
 const request = require( 'request-promise-native' );
-let redisClient = redis.createClient( config.redisURL );
+let redisClient = config.nodeENV === 'production' ? redis.createClient( config.redisURL ) : redis.createClient({
+  host: 'localhost',
+  port: 6379,
+  db: 1,
+});
 redisClient.on( 'error', ( err ) =>
 {
   console.log('Redis error: ', err);
@@ -184,11 +188,9 @@ const REDIRECT_URI = config.nodeENV == 'local' ? `http://localhost:${ PORT }/oau
 
  
 app.use(session({
-  store: config.nodeENV === 'production' ?
-    new RedisStore({ client: redisClient })
-    : null,
+  store: new RedisStore({ client: redisClient }),
   secret: 'ThisIsHowYouUseRedisSessionStorage',
-  name: '_redisPractice',
+  name: '_redisEasyworkforceSync',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }, // Note that the cookie-parser module is no longer needed
