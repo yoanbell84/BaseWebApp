@@ -605,7 +605,7 @@ const isValid = (req) =>
   else if ( req.headers[ 'x-hubspot-signature' ] )
   { 
     var requestSignature = req.headers[ 'x-hubspot-signature' ];
-    let clientSecret = process.env.CLIENT_SECRET;
+    let clientSecret = CLIENT_SECRET;
     let httpMethod = req.method;
     let body = Object.keys(req.body).length === 0 ? null : JSON.stringify(req.body);
     let httpURI = req.headers['x-forwarded-proto'] + '://' + req.headers.host + req.url;
@@ -715,10 +715,10 @@ app.get( '/quotes/:quoteId', async( req,res) =>
 app.get( '/quotes', function ( req, res )
 {
 
-  // if ( !isValid(req) )
-  //   res.sendStatus(403)
-  // else
-  // {
+  if ( !isValid(req) )
+    res.sendStatus(403)
+  else
+  {
     
     let userId = req.query.userId;
     let userEmail = req.query.userEmail;
@@ -779,7 +779,7 @@ app.get( '/quotes', function ( req, res )
      
     }
     return res.json( options );
-  // }
+  }
 } );
 
 app.post( '/quotes', async ( req, res ) =>
@@ -903,9 +903,9 @@ app.put( '/deals', async( req,res) =>
 
 app.post( '/webhock', ( req, res ) =>
 {
-  clientSecret = process.env.CLIENT_SECRET;
+  clientSecret = CLIENT_SECRET;
   httpMethod = 'POST';
-  httpURI = process.env.webhock_url;
+  httpURI = config.hubspotWebhockUrl;
   requestBody = JSON.stringify(req.body);
   sourceString = clientSecret + requestBody;
   var requestSignature = req.headers[ 'x-hubspot-signature' ];
