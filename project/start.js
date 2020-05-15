@@ -1,13 +1,14 @@
 var express = require( 'express' );
 const NodeCache = require('node-cache');
-
+const redis = require( 'redis' );
 const session = require( 'express-session' );
+let RedisStore = require( 'connect-redis' )( session );
 const request = require( 'request-promise-native' );
 
 const config = require( '../config' );
-let RedisStore = require( 'connect-redis' )( session );
 
-const redis = require( 'redis' );
+
+
 let redisClient = redis.createClient( config.redisURL );
 redisClient.on( 'error', ( err ) =>
 {
