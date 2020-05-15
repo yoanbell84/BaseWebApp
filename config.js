@@ -7,9 +7,10 @@ module.exports = {
   hubspotWebhockUrl:process.env.HUBSPOT_WEBHOCK_URL,
   port: process.env.PORT,
   hubspotScope: process.env.HUBSPOT_SCOPE,
-  nodeMode: process.env.NODE_MODE,
+  nodeENV: process.env.NODE_ENV,
   hubspotDevApiKey: process.env.HUBSPOT_DEV_API_KEY,
   firebaseDatabaseUrl: process.env.FIREBASE_DATABASE_URL,
+  redisURL:process.env.REDIS_URL,
   firebaseServiceAccount: { 
     type: process.env.FIREBASE_TYPE,
     project_id: process.env.FIREBASE_PROJECT_ID,

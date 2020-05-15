@@ -1,25 +1,37 @@
 var express = require( 'express' );
 const NodeCache = require('node-cache');
+
 const session = require( 'express-session' );
 const request = require( 'request-promise-native' );
+
+const config = require( '../config' );
+let RedisStore = require( 'connect-redis' )( session );
+
 const redis = require( 'redis' );
-const config = require('../config');
-const FirebaseStore = require( 'connect-session-firebase' )( session );
-const firebase = require( 'firebase-admin' );
+let redisClient = redis.createClient( config.redisURL );
+redisClient.on( 'error', ( err ) =>
+{
+  console.log('Redis error: ', err);
+} );
+
+const crypto = require( 'crypto' );
+const PORT = ( config.port || 5000 );
+
+// const FirebaseStore = require( 'connect-session-firebase' )( session );
+// const firebase = require( 'firebase-admin' );
 
 var app = express();
 app.use(express.json());       // to support JSON-encoded bodies
 app.use( express.urlencoded({ extended: true }) ); // to support URL-encoded bodies
 
 
-const crypto = require( 'crypto' );
-const PORT = (config.port || 5000);
 
 
-const ref = firebase.initializeApp( {
-  credential: firebase.credential.cert(config.firebaseServiceAccount),
-  databaseURL: config.firebaseDatabaseUrl
-});
+
+// const ref = firebase.initializeApp( {
+//   credential: firebase.credential.cert(config.firebaseServiceAccount),
+//   databaseURL: config.firebaseDatabaseUrl
+// });
 
 
 let refreshTokenStore = {};
@@ -148,8 +160,8 @@ if (config.hubspotScope) {
 }
 
 // On successful install, users will be redirected to /oauth-callback
-const base_url = config.nodeMode == 'DEBUG' ? `http://localhost:${ PORT }` : 'https://enigmatic-tor-68993.herokuapp.com';
-const REDIRECT_URI = config.nodeMode == 'DEBUG' ? `http://localhost:${ PORT }/oauth-callback` : 'https://enigmatic-tor-68993.herokuapp.com/oauth-callback';
+const base_url = config.nodeENV == 'local' ? `http://localhost:${ PORT }` : 'https://enigmatic-tor-68993.herokuapp.com';
+const REDIRECT_URI = config.nodeENV == 'local' ? `http://localhost:${ PORT }/oauth-callback` : 'https://enigmatic-tor-68993.herokuapp.com/oauth-callback';
 
 
 
@@ -163,16 +175,28 @@ const REDIRECT_URI = config.nodeMode == 'DEBUG' ? `http://localhost:${ PORT }/oa
 // }));
 
  
-express()
-  .use(session({
-    store: new FirebaseStore({
-      database: ref.database()
-    }),
-    secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true
-  }));
+// express()
+//   .use(session({
+//     store: new FirebaseStore({
+//       database: ref.database()
+//     }),
+//     secret: 'keyboard cat',
+//     resave: true,
+//     saveUninitialized: true
+//   }));
+
  
+app.use(session({
+  store: config.nodeENV === 'production' ?
+    new RedisStore( { url: config.redisURL } )
+    : null,
+  secret: 'ThisIsHowYouUseRedisSessionStorage',
+  name: '_redisPractice',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }, // Note that the cookie-parser module is no longer needed
+  
+}));
 //================================//
 //   Running the OAuth 2.0 Flow   //
 //================================//
