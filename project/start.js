@@ -631,9 +631,9 @@ const isValid = (req) =>
   return result
 }
 
-const createQuoteObj = (name,amount2) =>
+const createQuoteObj = (name,amount) =>
 { 
-  const amount = productList.map( prod => prod.quantity * prod.price ).reduce( ( a, b ) => ( a || 0 ) + ( b || 0 ) );
+
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date( Date.now() );
   var date = today.toISOString().split( 'T' )[ 0 ];
@@ -644,7 +644,10 @@ const createQuoteObj = (name,amount2) =>
     title: `Quote ${name}`,
     link: null,//`${ base_url }/quotes/${ id }`,
     createdAt: date,
-    amount:amount,
+    amount: {
+      value: amount,
+      currencyCode: "USD"
+    },
     status: "2",
     properties: [
       {
