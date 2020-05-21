@@ -760,13 +760,15 @@ app.get( '/quotes', function ( req, res )
     let iframeHttpURI = `${base_url}/quotes/create?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }&portalId=${portalId}`;
     
     let quoteResult = quotes.length > 0 && quotes || getDefaultQuote();
-  let primaryOption = getPrimaryActions( iframeHttpURI ); //quotes && quotes.length == 0 && getPrimaryActions( iframeHttpURI ) || null;
+    let primaryOption = getPrimaryActions( iframeHttpURI ); //quotes && quotes.length == 0 && getPrimaryActions( iframeHttpURI ) || null;
     let secondaryOptions = quotes.length > 0 && getSecondaryActions(quotes.map(q=>q.objectId)) || null;
 
     var options = {
       results: quoteResult,
       primaryAction: primaryOption,
       secondaryActions: secondaryOptions,
+      allItemsLink: quoteResult.length >=3 ? `${ base_url }/quotes?dealId=${ associatedObjectId }` : null,
+      itemLabel: "see more..."
       // results: [
       //   {
       //     quote_name: 'Quote Test',
