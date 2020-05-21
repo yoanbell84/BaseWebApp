@@ -109,7 +109,13 @@ const getSecondaryActions = ( quoteIds ) =>
   //   quoteIds.map( id =>
   //   { 
   //     options.push(
-     
+      // type: "CONFIRMATION_ACTION_HOOK",
+            // confirmationMessage: "Are you sure you want to delete this quotes",
+            // confirmButtonText: "Yes",
+            // cancelButtonText: "No",
+            // httpMethod: "DELETE",
+            // uri: `${ base_url }/quotes/${ id }`,
+            // label: "Delete
   //   );
   // })
 // }
@@ -684,14 +690,7 @@ const createQuoteObj = (name,amount) =>
             label: "Edit"
         },
         {
-            // type: "CONFIRMATION_ACTION_HOOK",
-            // confirmationMessage: "Are you sure you want to delete this quote",
-            // confirmButtonText: "Yes",
-            // cancelButtonText: "No",
-            // httpMethod: "DELETE",
-            // uri: `${ base_url }/quotes/${ id }`,
-            // label: "Delete"
-            
+                       
             type: "IFRAME",
             width: 800,
             height: 800,
@@ -887,7 +886,7 @@ app.post( '/quotes', async ( req, res ) =>
       //   console.log( 'Associate Quote=====>', quoteDealResult )
       // } );
   if ( !updatedDeal ) return res.sendStatus( 400 );
-  console.log( 'Deal Amount', updatedDeal.properties.amount );
+  
   quotes.map( q => q.status = "1" );
   quotes.push( createQuoteObj(req.body.quote_name,updatedDeal.properties.amount) );
   res.render( 'pages/quote_ok' );
