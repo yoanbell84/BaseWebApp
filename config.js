@@ -4,7 +4,7 @@ dotenv.config();
 module.exports = {
   hubspotClientId: process.env.HUBSPOT_CLIENT_ID,
   hubspotClientSecret: process.env.HUBSPOT_CLIENT_SECRET,
-  hubspotWebhockUrl:process.env.HUBSPOT_WEBHOCK_URL,
+  hubspotWebhookUrl:process.env.HUBSPOT_WEBHOCK_URL,
   port: process.env.PORT,
   hubspotScope: process.env.HUBSPOT_SCOPE,
   nodeENV: process.env.NODE_ENV,

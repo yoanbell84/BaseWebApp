@@ -101,37 +101,15 @@ const getPrimaryActions = (actionUrl,label = "Create CRM Quote") =>
 const getSecondaryActions = ( quoteIds ) =>
 {
   let options = [];
-  if ( quoteIds && quoteIds.length > 0 )
-  { 
-    quoteIds.map( id =>
-    { 
-      options.push(
-      {
-          type: "ACTION_HOOK",
-          httpMethod: "PUT",
-          uri: `${ base_url }/deals`,
-          label: "Refresh deal"
-      },
-      {
-          type: "IFRAME",
-          width: 800,
-          height: 800,
-          uri: `${ base_url }/quotes/edit/${ id }`,
-          label: "Edit"
-      },
-      {
-          type: "CONFIRMATION_ACTION_HOOK",
-          confirmationMessage: "Are you sure you want to delete this quote",
-          confirmButtonText: "Yes",
-          cancelButtonText: "No",
-          httpMethod: "DELETE",
-          uri: `${ base_url }/quotes/${ id }`,
-          label: "Delete"
-      }
-    );
-  })
-}
-
+  // if ( quoteIds && quoteIds.length > 0 )
+  // { 
+  //   quoteIds.map( id =>
+  //   { 
+  //     options.push(
+     
+  //   );
+  // })
+// }
   return options;
  
 } 
@@ -587,7 +565,8 @@ const UpdateDeal = async ( accessToken,deal) =>
         tax: 150,
         shipping: 130,
         max_users: 50,
-        dealstage: 'qualifiedtobuy'
+        dealstage: 'qualifiedtobuy',
+        active_quote: '12'
       }
     },
     json: true
@@ -660,25 +639,21 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
   const result = {
     objectId: id,
     title: `Quote ${name}`,
-    link: `${ base_url }/quotes/${ id }`,
+    link: null,//`${ base_url }/quotes/${ id }`,
+    status: "Active",
     properties: [
       {
         label: "Created",
         dataType: "DATE",
         value: date
       },
-      {
-        label: "Status",
-        name: "status",
-        dataType: "STATUS",
-        optionType: "SUCCESS",
-        value: "Ready to Send"
-      },
-      {
-        label: "Send to",
-        dataType: "EMAIL",
-        value: contactEmail
-      },
+      // {
+      //   label: "Status",
+      //   name: "status",
+      //   dataType: "STATUS",
+      //   optionType: "SUCCESS",
+      //   value: "Active"
+      // },    
       {
         label: "Amount",
         dataType: "CURRENCY",
@@ -690,6 +665,31 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
         dataType: "DATE",
         value: expiringDate
       }
+    ],
+    actions: [
+        {
+            type: "IFRAME",
+            width: 800,
+            height: 800,
+            uri: `${ base_url }/quotes/edit/${ id }`,
+            label: "Edit"
+        },
+        {
+            // type: "CONFIRMATION_ACTION_HOOK",
+            // confirmationMessage: "Are you sure you want to delete this quote",
+            // confirmButtonText: "Yes",
+            // cancelButtonText: "No",
+            // httpMethod: "DELETE",
+            // uri: `${ base_url }/quotes/${ id }`,
+            // label: "Delete"
+            
+            type: "IFRAME",
+            width: 800,
+            height: 800,
+            uri: `${ base_url }/quotes/${ id }/convert`,
+            label: "Convert to order"
+          
+        }
     ]
   };
 
@@ -924,11 +924,11 @@ app.put( '/deals', async( req,res) =>
 
 
 
-app.post( '/webhock', ( req, res ) =>
+app.post( '/webhook', ( req, res ) =>
 {
   clientSecret = CLIENT_SECRET;
   httpMethod = 'POST';
-  httpURI = config.hubspotWebhockUrl;
+  httpURI = config.hubspotWebhookUrl;
   requestBody = JSON.stringify(req.body);
   sourceString = clientSecret + requestBody;
   var requestSignature = req.headers[ 'x-hubspot-signature' ];
