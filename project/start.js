@@ -742,10 +742,10 @@ app.get( '/quotes/:quoteId', async( req,res) =>
 app.get( '/quotes', function ( req, res )
 {
 
-  if ( !isValid(req) )
-    res.sendStatus(403)
-  else
-  {
+  // if ( !isValid(req) )
+  //   res.sendStatus(403)
+  // else
+  // {
     
     let userId = req.query.userId;
     let userEmail = req.query.userEmail;
@@ -806,7 +806,7 @@ app.get( '/quotes', function ( req, res )
      
     }
     return res.json( options );
-  }
+  // }
 } );
 
 app.post( '/quotes', async ( req, res ) =>
