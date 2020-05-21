@@ -79,12 +79,15 @@ const getDefaultQuote = () =>
       title: 'Quote',
       link: null,
       objectId: 1,
-      properties: [ {
-        label: "Status",
-        dataType: "STATUS",
-        optionType: "WARNING",
-        value: "Not created"
-      } ]
+      status: "0",
+      // properties: [
+      //   {
+      //   label: "Status",
+      //   dataType: "STATUS",
+      //   optionType: "WARNING",
+      //   value: "Not created"
+      // }
+      // ]
     } ]
 };
 
@@ -628,7 +631,7 @@ const isValid = (req) =>
   return result
 }
 
-const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
+const createQuoteObj = (name,amount) =>
 { 
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date( Date.now() );
@@ -643,7 +646,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
     link: null,//`${ base_url }/quotes/${ id }`,
     createdAt: date,
     amount:namount,
-    status: "1",
+    status: "2",
     properties: [
       {
         label: "Expiring",
@@ -757,7 +760,7 @@ app.get( '/quotes', function ( req, res )
     let iframeHttpURI = `${base_url}/quotes/create?userId=${ userId }&userEmail=${ userEmail }&dealId=${ associatedObjectId }&portalId=${portalId}`;
     
     let quoteResult = quotes.length > 0 && quotes || getDefaultQuote();
-    let primaryOption = quotes && quotes.length == 0 && getPrimaryActions( iframeHttpURI ) || null;
+  let primaryOption = getPrimaryActions( iframeHttpURI ); //quotes && quotes.length == 0 && getPrimaryActions( iframeHttpURI ) || null;
     let secondaryOptions = quotes.length > 0 && getSecondaryActions(quotes.map(q=>q.objectId)) || null;
 
     var options = {
@@ -881,8 +884,8 @@ app.post( '/quotes', async ( req, res ) =>
       // } );
   if ( !updatedDeal ) return res.sendStatus( 400 );
   console.log( 'Deal Amount', updatedDeal.properties.amount );
-  
-  quotes.push( createQuoteObj(req.body.quote_name,req.body.quote_name,userEmail,contactEmail = 'yoanbell84@gmail.com', updatedDeal.properties.amount) );
+  quotes.map( q => q.status = "1" );
+  quotes.push( createQuoteObj(req.body.quote_name,updatedDeal.properties.amount) );
   res.render( 'pages/quote_ok' );
     
 } )
