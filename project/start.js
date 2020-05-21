@@ -631,21 +631,20 @@ const isValid = (req) =>
   return result
 }
 
-const createQuoteObj = (name,amount) =>
+const createQuoteObj = (name,amount2) =>
 { 
+  const amount = productList.map( prod => prod.quantity * prod.price ).reduce( ( a, b ) => ( a || 0 ) + ( b || 0 ) );
   let id = Math.floor( Math.random() * 100001 );
   var today = new Date( Date.now() );
   var date = today.toISOString().split( 'T' )[ 0 ];
   today.setMonth((today.getMonth() + 1) + 2);
   var expiringDate = today.toISOString().split( 'T' )[ 0 ];
-  var namount = amount * 1;
-  console.log('AMOUNT', typeof(amount))
   const result = {
     objectId: id,
     title: `Quote ${name}`,
     link: null,//`${ base_url }/quotes/${ id }`,
     createdAt: date,
-    amount:`${namount}`,
+    amount:amount,
     status: "2",
     properties: [
       {
@@ -872,7 +871,7 @@ app.post( '/quotes', async ( req, res ) =>
   
       if(!lineItemsDeals) return res.sendStatus( 400 );
           
-      let updatedDeal = await UpdateDeal( accessToken,deal).then( resultUpdate =>
+      let updatedDeal = await UpdateDeal( accessToken,deal, ).then( resultUpdate =>
       { 
         console.log( '=== Succesfully Update Deal from HubSpot using the access token ===' );
         return resultUpdate && resultUpdate.id && resultUpdate || null;
