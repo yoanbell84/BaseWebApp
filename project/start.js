@@ -638,14 +638,14 @@ const createQuoteObj = (name,amount) =>
   var date = today.toISOString().split( 'T' )[ 0 ];
   today.setMonth((today.getMonth() + 1) + 2);
   var expiringDate = today.toISOString().split( 'T' )[ 0 ];
-  var namount = parseFloat( amount );
+  var namount = amount * 1;
   console.log('AMOUNT', typeof(amount))
   const result = {
     objectId: id,
     title: `Quote ${name}`,
     link: null,//`${ base_url }/quotes/${ id }`,
     createdAt: date,
-    amount:namount,
+    amount:`${namount}`,
     status: "2",
     properties: [
       {
