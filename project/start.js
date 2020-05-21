@@ -767,7 +767,7 @@ app.get( '/quotes', function ( req, res )
       results: quoteResult,
       primaryAction: primaryOption,
       secondaryActions: secondaryOptions,
-      allItemsLink: quoteResult.length >=3 ? `${ base_url }/quotes?dealId=${ associatedObjectId }` : null,
+      allItemsLink: `${ base_url }/quotes?dealId=${ associatedObjectId }`,
       itemLabel: "see more..."
       // results: [
       //   {
