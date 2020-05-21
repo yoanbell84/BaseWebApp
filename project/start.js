@@ -767,8 +767,7 @@ app.get( '/quotes', function ( req, res )
       results: quoteResult,
       primaryAction: primaryOption,
       secondaryActions: secondaryOptions,
-      allItemsLink: `${ base_url }/quotes?dealId=${ associatedObjectId }`,
-      itemLabel: "see more..."
+      allItemsLink: `${ base_url }/quotes?dealId=${ associatedObjectId }`
       // results: [
       //   {
       //     quote_name: 'Quote Test',
