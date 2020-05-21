@@ -878,7 +878,8 @@ app.post( '/quotes', async ( req, res ) =>
       //   console.log( '=== Succesfully Asociated Quote To Deal from HubSpot using the access token ===' );
       //   console.log( 'Associate Quote=====>', quoteDealResult )
       // } );
-    if (!updatedDeal) return res.sendStatus( 400 );
+  if ( !updatedDeal ) return res.sendStatus( 400 );
+  console.log( 'Deal Amount', updatedDeal.properties.amount );
   
   quotes.push( createQuoteObj(req.body.quote_name,req.body.quote_name,userEmail,contactEmail = 'yoanbell84@gmail.com', updatedDeal.properties.amount) );
   res.render( 'pages/quote_ok' );
