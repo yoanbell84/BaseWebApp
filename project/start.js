@@ -642,7 +642,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
     title: `Quote ${name}`,
     link: null,//`${ base_url }/quotes/${ id }`,
     createdAt: date,
-    amount:Number(amount),
+    amount:+amount,
     status: "active",
     properties: [
       // {
