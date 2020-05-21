@@ -683,20 +683,27 @@ const createQuoteObj = (name,amount) =>
     ],
     actions: [
         {
-            type: "IFRAME",
-            width: 800,
-            height: 800,
-            uri: `${ base_url }/quotes/edit/${ id }`,
-            label: "Edit"
+          type: "IFRAME",
+          width: 800,
+          height: 800,
+          uri: `${ base_url }/quotes/edit/${ id }`,
+          label: "Edit"
+        },
+        {                       
+          type: "IFRAME",
+          width: 800,
+          height: 800,
+          uri: `${ base_url }/quotes/${ id }/convert`,
+          label: "Convert to order"          
         },
         {
-                       
-            type: "IFRAME",
-            width: 800,
-            height: 800,
-            uri: `${ base_url }/quotes/${ id }/convert`,
-            label: "Convert to order"
-          
+          type: "CONFIRMATION_ACTION_HOOK",
+          confirmationMessage: "Are you sure you want to delete this quotes",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+          httpMethod: "DELETE",
+          uri: `${ base_url }/quotes/${ id }`,
+          label: "Delete"
         }
     ]
   };
