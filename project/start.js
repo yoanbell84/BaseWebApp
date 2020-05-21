@@ -643,8 +643,13 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
     link: null,//`${ base_url }/quotes/${ id }`,
     createdAt: date,
     amount:parseFloat(amount),
-    status: "active",
+    status: 1,
     properties: [
+      {
+        label: "Expiring",
+        dataType: "DATE",
+        value: expiringDate
+      }
       // {
       //   label: "Created",
       //   dataType: "DATE",
@@ -663,11 +668,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
       //   value: amount,
       //   currencyCode: "USD"
       // },
-      {
-        label: "Expiring",
-        dataType: "DATE",
-        value: expiringDate
-      }
+    
     ],
     actions: [
         {
