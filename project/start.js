@@ -635,15 +635,15 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
   var date = today.toISOString().split( 'T' )[ 0 ];
   today.setMonth((today.getMonth() + 1) + 2);
   var expiringDate = today.toISOString().split( 'T' )[ 0 ];
-  
+  var namount = parseFloat( amount );
   console.log('AMOUNT', typeof(amount))
   const result = {
     objectId: id,
     title: `Quote ${name}`,
     link: null,//`${ base_url }/quotes/${ id }`,
     createdAt: date,
-    amount:parseFloat(amount),
-    status: 1,
+    amount:namount,
+    status: "1",
     properties: [
       {
         label: "Expiring",
