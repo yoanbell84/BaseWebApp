@@ -640,26 +640,28 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
     objectId: id,
     title: `Quote ${name}`,
     link: null,//`${ base_url }/quotes/${ id }`,
-    status: "Active",
+    createdAt: date,
+    amount:amount,
+    status: "active",
     properties: [
-      {
-        label: "Created",
-        dataType: "DATE",
-        value: date
-      },
+      // {
+      //   label: "Created",
+      //   dataType: "DATE",
+      //   value: date
+      // },
       // {
       //   label: "Status",
       //   name: "status",
       //   dataType: "STATUS",
       //   optionType: "SUCCESS",
       //   value: "Active"
-      // },    
-      {
-        label: "Amount",
-        dataType: "CURRENCY",
-        value: amount,
-        currencyCode: "USD"
-      },
+      // // },    
+      // {
+      //   label: "Amount",
+      //   dataType: "CURRENCY",
+      //   value: amount,
+      //   currencyCode: "USD"
+      // },
       {
         label: "Expiring",
         dataType: "DATE",
