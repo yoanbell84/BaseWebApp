@@ -636,6 +636,7 @@ const createQuoteObj = (name,title, userEmail ,contactEmail,amount) =>
   today.setMonth((today.getMonth() + 1) + 2);
   var expiringDate = today.toISOString().split( 'T' )[ 0 ];
   
+  console.log('AMOUNT', typeof(amount))
   const result = {
     objectId: id,
     title: `Quote ${name}`,
