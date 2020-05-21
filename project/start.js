@@ -770,7 +770,7 @@ app.get( '/quotes', function ( req, res )
       primaryAction: primaryOption,
       secondaryActions: secondaryOptions,
       allItemsLink: `${ base_url }/quotes?dealId=${ associatedObjectId }`,
-      totalCount:quoteResult.length + 10
+      totalCount:quoteResult.length
       // results: [
       //   {
       //     quote_name: 'Quote Test',
