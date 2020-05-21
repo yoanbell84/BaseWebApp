@@ -769,8 +769,8 @@ app.get( '/quotes', function ( req, res )
       results: quoteResult,
       primaryAction: primaryOption,
       secondaryActions: secondaryOptions,
-      allItemsLink: `${ base_url }/quotes?dealId=${ associatedObjectId }`,
-      totalCount:quoteResult.length
+      allItemsLink: quoteResult.length > 5 ? `${ base_url }/quotes?dealId=${ associatedObjectId }` : null,
+      totalCount:quoteResult.length > 5 ? quoteResult.length : null
       // results: [
       //   {
       //     quote_name: 'Quote Test',
