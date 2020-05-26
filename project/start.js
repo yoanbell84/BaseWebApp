@@ -147,6 +147,7 @@ let SCOPES = ['contacts'];
 if (config.hubspotScope) {
     SCOPES = (config.hubspotScope.split(/ |, ?|%20/)).join(' ');
 }
+console.log( config )
 console.log(SCOPES)
 // On successful install, users will be redirected to /oauth-callback
 const base_url = config.nodeENV == 'local' ? `http://localhost:${ PORT }` : 'https://enigmatic-tor-68993.herokuapp.com';
