@@ -124,8 +124,8 @@ const getSecondaryActions = ( quoteIds ) =>
 } 
 
 
-const hubspotClient = new hubspot.Client();
-hubspotClient.oauth.de
+// const hubspotClient = new hubspot.Client();
+// hubspotClient.oauth.de
 
 //===========================================================================//
 //  HUBSPOT APP CONFIGURATION
