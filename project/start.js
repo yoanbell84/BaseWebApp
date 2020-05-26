@@ -124,7 +124,8 @@ const getSecondaryActions = ( quoteIds ) =>
 } 
 
 
-
+const hubspotClient = new hubspot.Client();
+hubspotClient.oauth.de
 
 //===========================================================================//
 //  HUBSPOT APP CONFIGURATION
@@ -264,7 +265,8 @@ const exchangeForTokens = async (userId, exchangeProof) => {
     // accessTokenCache.set(userId, tokens.access_token, Math.round(tokens.expires_in * 0.75));
     accessTokenCache.set(tokens.refresh_token, tokens.access_token, Math.round(tokens.expires_in * 0.75));
 
-    console.log('       > Received an access token and refresh token');
+    console.log( '       > Received an access token and refresh token' );
+    console.log("Received Token==================>" , tokens )
     return tokens.access_token;
   } catch (e) {
     console.error(`       > Error exchanging ${exchangeProof.grant_type} for access token`);
