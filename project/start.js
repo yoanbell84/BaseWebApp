@@ -1031,7 +1031,8 @@ app.get( '/company-detail', function ( req, res )
               type: "IFRAME",
               width: 1500,
               height: 1500,
-              uri: "https://dev-ezcrm.easyworkforce.cloud/customers?company-code="+companyCode,
+              // uri: "https://dev-ezcrm.easyworkforce.cloud/customers?company-code="+companyCode,
+              uri:"http://localhost:3000/customer-detail/46715",
               label: "more details"
             }
           ]
