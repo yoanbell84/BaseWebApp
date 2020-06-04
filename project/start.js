@@ -991,10 +991,10 @@ app.get( '/company-detail', function ( req, res )
               value: 195,
               currencyCode: "USD"
             },
-            service_balance: {
-              value: null,
-              currencyCode: "USD"
-            },
+            // service_balance: {
+            //   value: null,
+            //   currencyCode: "USD"
+            // },
             // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
             /*properties: [
               {
