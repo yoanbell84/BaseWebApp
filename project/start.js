@@ -991,48 +991,14 @@ app.get( '/company-detail', function ( req, res )
               value: 195,
               currencyCode: "USD"
             },
-            // service_balance: {
-            //   value: null,
-            //   currencyCode: "USD"
-            // },
-            // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
-            /*properties: [
-              {
-                label: "License Information",
-                dataType: "STRING",
-                value: "TimeLogix Software (TLH-SM) for 10 users"
-              },
-              {
-                label: "License Status",
-                dataType: "STATUS",
-                value: "Active",
-                optionType: "SUCCESS"
-              },
-              {
-                label: "Expiration",
-                dataType: "DATE",
-                value: "2020-05-30"
-                
-              },
-              {
-                label: "Max Users",
-                dataType: "NUMERIC",
-                value: 10,
-              },
-              {
-                label: "Monthly amount",
-                dataType: "CURRENCY",
-                currencyCode: "USD",
-                value: 195,
-              },
+            properties: [
               {
                 label: "Service Balance",
                 dataType: "CURRENCY",
                 currencyCode: "USD",
                 value: 195,
               }
-            ],*/
-
+            ],
             actions: [
               {
                 type: "IFRAME",
