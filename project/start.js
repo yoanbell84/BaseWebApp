@@ -368,21 +368,6 @@ const createLineItems = async ( accessToken ) =>
     body: {
       inputs: [ ...productList.map( prod => ({ properties: prod}))]
     },
-    
-    //  body:   [
-    //     { name:'hs_product_id' , value: 101043990 },
-    //     { name:'quantity' , value: 2},
-    //     { name:'price' , value: 899},
-    //     { name:'name' , value:'Xenio-500'}
-        
-    //   ],
-    //   [
-    //     { name:'hs_product_id' , value: 101043994 },
-    //     { name:'quantity' , value: 4},
-    //     { name:'price' , value: 749},
-    //     { name:'name' , value:'Xenio-50'}
-    //   ]
-    // ],
   
     json: true
   }
@@ -983,70 +968,74 @@ app.get( '/company-detail', function ( req, res )
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
     let companyCode = req.query.company_code;
-
+    let companyName = req.query.name;
     var options = {
-      results: [
-        {
-          objectId: 26785,
-          title: '1 Voice',
-          // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
-          properties: [
-            {
-              label: "License Information",
-              dataType: "STRING",
-              value: "TimeLogix Software (TLH-SM) for 10 users"
-            }, 
-            {
-              label: "License Status",
-              dataType: "STATUS",
-              value: "Active",
-              optionType: "SUCCESS"
-            },
-            {
-              label: "Expiration",
-              dataType: "DATE",
-              value: "2020-05-30"
-              
-            },
-            {
-              label: "Max Users",
-              dataType: "NUMERIC",
-              value: 10,
-            },
-            {
-              label: "Monthly amount",
-              dataType: "CURRENCY",
-              currencyCode: "USD",
-              value: 195,
-            },
-            {
-              label: "Service Balance",
-              dataType: "CURRENCY",
-              currencyCode: "USD",
-              value: 195,
-            }
-          ],
-          actions: [
-            {
-              type: "IFRAME",
-              width: 1500,
-              height: 1500,
-              // uri: "https://dev-ezcrm.easyworkforce.cloud/customers?company-code="+companyCode,
-              uri:"http://localhost:3000/customer-detail/46715",
-              label: "more details"
-            }
-          ]
-        }  
-      ],
-      // primaryAction: {
-      //   type: "IFRAME",
-      //   width: 1500,
-      //   height: 1500,
-      //   uri: httpURI,
-      //   label: "Create CRM Quote"
-      // }
+      results: [ {
+        objectId: 0,
+        title: 'No data available',
+      }]
     }
-    return res.json(options);
+
+    if ( companyCode )
+    {
+      options = {
+        results: [
+          {
+            objectId: 26785,
+            title: companyName,
+            // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
+            properties: [
+              {
+                label: "License Information",
+                dataType: "STRING",
+                value: "TimeLogix Software (TLH-SM) for 10 users"
+              },
+              {
+                label: "License Status",
+                dataType: "STATUS",
+                value: "Active",
+                optionType: "SUCCESS"
+              },
+              {
+                label: "Expiration",
+                dataType: "DATE",
+                value: "2020-05-30"
+                
+              },
+              {
+                label: "Max Users",
+                dataType: "NUMERIC",
+                value: 10,
+              },
+              {
+                label: "Monthly amount",
+                dataType: "CURRENCY",
+                currencyCode: "USD",
+                value: 195,
+              },
+              {
+                label: "Service Balance",
+                dataType: "CURRENCY",
+                currencyCode: "USD",
+                value: 195,
+              }
+            ],
+            actions: [
+              {
+                type: "IFRAME",
+                width: 1500,
+                height: 1500,
+                // uri: "https://dev-ezcrm.easyworkforce.cloud/customers?company-code="+companyCode,
+                uri: "http://localhost:3000/customer-detail/46715",
+                label: "more details"
+              }
+            ]
+          }
+        ]
+      }
+    }
+
+   return res.json(options);
   }
  
 } );
