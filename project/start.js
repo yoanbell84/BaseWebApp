@@ -957,10 +957,10 @@ app.post( '/webhook', ( req, res ) =>
 app.get( '/company-detail', function ( req, res )
 {
 
-  if ( !isValid( req ) )
-    res.sendStatus( 403 )
-  else
-  { 
+  // if ( !isValid( req ) )
+  //   res.sendStatus( 403 )
+  // else
+  // { 
    
     let userId = req.query.userId;
     let userEmail = req.query.userEmail;
@@ -983,8 +983,17 @@ app.get( '/company-detail', function ( req, res )
           {
             objectId: 26785,
             title: companyName,
+            license_information: 'TimeLogix Software (TLH-SM) for 10 users',
+            license_status: "1",
+            license_expiration: "2020-06-30",
+            max_users: 20,
+            monthly_amount: {
+              value: 195,
+              currencyCode: "USD"
+            },
+            service_balance: null,
             // link: 'https://dev-ezcrm.easyworkforce.cloud/customers?company-code=46785',
-            properties: [
+            /*properties: [
               {
                 label: "License Information",
                 dataType: "STRING",
@@ -1019,7 +1028,8 @@ app.get( '/company-detail', function ( req, res )
                 currencyCode: "USD",
                 value: 195,
               }
-            ],
+            ],*/
+
             actions: [
               {
                 type: "IFRAME",
@@ -1036,7 +1046,7 @@ app.get( '/company-detail', function ( req, res )
     }
 
    return res.json(options);
-  }
+  // }
  
 } );
 
