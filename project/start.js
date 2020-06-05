@@ -970,10 +970,12 @@ app.get( '/company-detail', function ( req, res )
     let companyCode = req.query.company_code;
     let companyName = req.query.name;
     var options = {
-      results: [ {
-        objectId: 0,
-        title: 'No data available',
-      }]
+      results: [
+        //{
+        // objectId: 0,
+        // title: 'No data available',
+      //}
+    ]
     }
 
     if ( companyCode )
