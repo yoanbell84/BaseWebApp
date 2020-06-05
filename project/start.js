@@ -972,7 +972,7 @@ app.get( '/company-detail', function ( req, res )
     var options = {
       results: [
         {
-        // objectId: 0,
+        objectId: 0,
         title: 'No data available',
       }
       ]
