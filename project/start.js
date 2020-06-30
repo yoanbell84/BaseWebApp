@@ -738,7 +738,7 @@ app.get( '/quotes/:quoteId', async( req,res) =>
  res.write( `<div>View Quote ${ req.params.quoteId }</div>` );   
 } );
 
-app.get( '/quotes', function ( req, res )
+app.get( '/quotes?', function ( req, res )
 {
 
   // if ( !isValid(req) )
@@ -967,7 +967,7 @@ app.get( '/company-detail', function ( req, res )
     let associatedObjectId = req.query.associatedObjectId;
     let associatedObjectType = req.query.associatedObjectType;
     let portalId = req.query.portalId;
-    let companyCode = req.query.company_code;
+    let companyCode = req.query.client_id;
     let companyName = req.query.name;
     var options = {
       results: [
@@ -983,22 +983,15 @@ app.get( '/company-detail', function ( req, res )
       options = {
         results: [
           {
-            objectId: 26785,
+            objectId: 1001,
             title: companyName,
-            license_information: 'TimeLogix Software (TLH-SM) for 10 users',
-            license_status: "1",
-            license_expiration: "2020-06-30",
-            max_users: 20,
-            monthly_amount: {
-              value: 195,
-              currencyCode: "USD"
-            },
+           
             properties: [
               {
-                label: "Service Balance",
-                dataType: "CURRENCY",
-                currencyCode: "USD",
-                value: 195,
+                "$id": "5",
+                "label": "CreatedAt",
+                "dataType": "DATE",
+                "value": "2020-06-30"
               }
             ],
             actions: [
