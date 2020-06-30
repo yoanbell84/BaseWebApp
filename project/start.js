@@ -988,7 +988,7 @@ app.get( '/company-detail', function ( req, res )
            
             properties: [
               {
-                "$id": "5",
+               
                 "label": "CreatedAt",
                 "dataType": "DATE",
                 "value": "2020-06-30"
